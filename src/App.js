@@ -1,45 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Card from "./components/Card";
+import Filters from "./components/Filters"
+import Controls from "./components/Controls"
+import Results from "./components/Results"
+import Feed from "./components/Feed"
 
 function App() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
-  const gcustomKey = process.env.REACT_APP_GOOGLE_CUSTOM_IMAGE_SEARCH_KEY
-  useEffect(() => {
-    let query = 'ankheg'
-    let queryURL = `https://evening-fjord-19580.herokuapp.com/https://forgottenrealms.fandom.com/api.php?action=query&prop=images&titles=${query}&format=json`
-    fetch(queryURL)
-      .then(res => res.json())
+
+  const [data, setData] = useState('');
+  const [profileImg, setProfileImg] = useState('');
+  const [conditions, setConditions] = useState(null)
+
+  useEffect(()=>{
+  getConditions()
+  }, [])
+
+  async function getCondition(condition){
+if (condition !== null){
+  let url = `https://www.dnd5eapi.co/api/conditions/${condition.toLowerCase()}`;
+  await fetch(url)
+    .then((res) => res.json())
+    .then(
+      async (result) => {
+        // setIsLoaded(true);
+        let desc = result.desc.join(' ').replace(/- /g, '')
+        let name = result.name;
+        let conditionsObject = {
+          name,
+          desc
+        };
+        return conditionsObject
+      }
+    )
+}
+
+  }
+
+  async function getConditions(){
+    let url = `https://www.dnd5eapi.co/api/conditions`;
+    await fetch(url)
+      .then((res) => res.json())
       .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-          let pageID = Object.keys(result.query.pages)[0]
-          console.log(pageID)
-          let imgURL = `https://evening-fjord-19580.herokuapp.com/https://forgottenrealms.fandom.com/api.php?action=imageserving&wisId=${pageID}&format=json`
+        async (result) => {
+          // setIsLoaded(true);
+          if (result){
+            let res = result.results
+      if (res !== undefined){
+        console.log(res)
+        console.log('conditions results')
+        let conditionsArr = []
+        res.forEach(async function(x){
+          await conditionsArr.push(x.name)
+        })
 
-          fetch(imgURL)
-          .then(res => res.json())
-          .then(
-            (res) => {
-              console.log(res.image.imageserving)
-            })
+        setConditions(conditionsArr)
+        // console.log(getCondition(conditions[0]))
+      }
+          }
 
-
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
         }
       )
-  }, [])
+  }
+
+
   return (
-    <div className="App">
-<p>hey</p>
+    <div className="flex h-screen overflow-hidden">
+      <div className="flex flex-row">
+        <div className="flex-1 bg-red-200 overflow-y-scroll">
+          <Results
+          conditions={conditions}
+          data={data} setData={(val)=>setData(val)} />
+        </div>
+        <div className="flex w-1/2 bg-blue-200 flex-row">
+        <Feed data={data}/>
+        <Filters setData={(val)=>setData(val)}  />
+
+        </div>
+      </div>
     </div>
   );
 }
