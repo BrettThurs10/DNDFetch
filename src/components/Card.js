@@ -1,181 +1,290 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from '@material-ui/core/Button';
+import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faChevronRight,
-  faShoePrints,
-} from "@fortawesome/free-solid-svg-icons";
-import {io} from '../assets/imgOverride';
-import archmage from '../img/archmage.jpg';
+import { faImages, faChevronRight, faSave } from "@fortawesome/free-solid-svg-icons";
+import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { green, purple } from '@material-ui/core/colors';
 
-library.add(faShoePrints, faChevronRight);
-const speed = <FontAwesomeIcon icon={faShoePrints} />;
+library.add(faChevronRight, faImages, faSave);
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />;
-
-function flipCard(flip){
-
-    if (flip == undefined){
-        var elem = document.getElementById("card");
-        elem.className += " flipped";
-    } else {
-        var elem = document.getElementById("card");
-        elem.classList.remove("flipped");
-    }
-
-
-}
+const images = <FontAwesomeIcon className="text-lg" icon={faImages} />;
+const save = <FontAwesomeIcon icon={faSave} />
 
 function Card(props) {
-    const [error, setError] =useState('')
-    const [data, setData] = useState(props.data);
-    const [profileImg, setProfileImg] = useState('');
-    const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState("");
+  const [data, setData] = useState(props.data);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [refresh, setRefresh] = useState(props.refresh)
+
+  useEffect(() => {
+    setData(props.data);
+    setRefresh(props.refresh)
+
+  });
+
+  const GoogleButton = withStyles((theme) => ({
+    root: {
+        textAlign: 'left',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        boxShadow: '0 0 0 0 black',
+        borderRadius: 0,
+      color: theme.palette.getContrastText(green[500]),
+      backgroundColor: green[500],
+      '&:hover': {
+        backgroundColor: green[700],
+      },
+    },
+  }))(Button);
+
+  const SaveButton = withStyles((theme) => ({
+    root: {
+        textAlign: 'left',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        boxShadow: '0 0 0 0 black',
+        borderRadius: 0,
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor: purple[500],
+      '&:hover': {
+        backgroundColor: purple[700],
+      },
+    },
+  }))(Button);
+
+  function saveThisCard(cardObj){
+    let arr = []
+    props.cardLibrary.forEach(element => {
+      arr.push(element.name)
+    });
+    if (arr.indexOf(cardObj.name) == -1){
+      props.saveThisCard(cardObj)
+    } else {
+      alert('You already have this card.')
+    }
+    console.log(cardObj)
+  }
+
+  const myName = data.name
+
+  function wrapWords(str, tmpl) {
+    return str.replace(/\w+/g, tmpl || "<span>$&</span>");
+  }
+
+  function goToGoogleImageSearch(name){
+    const url = `https://www.google.com/search?q=${name}&tbm=isch&chips=q:${name},g_1:d%26d:XO36OVmqhVo%3D&hl=en&sa=X&ved=2ahUKEwiyqqyD48XtAhUj8VMKHdW7CIsQ4lYoAXoECAEQGw&biw=1280&bih=607`;
+    return url
+  }
 
 
+  function cleanEntries(obj){
+      return Object.entries(obj).join(' ').replace(/,/g, " ").replace(/\./g, ",")
+  }
 
-useEffect(()=>{
-    setData(props.data)
-    setProfileImg(props.profileImg)
+  function returnSpeed(speedObj){
+      let speedString
+      speedObj !== undefined ?
+      speedString = cleanEntries(speedObj)
+      :
+      speedString = ""
+      return speedString
+  }
 
-})
+  const stats = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+  function returnStat(val){
+      let stat
+    switch(val) {
+        case 'str':
+          stat = "strength"
+          break;
+          case 'dex':
+            stat = "dexterity"
+            break;
+            case 'con':
+                stat = "constitution"
+                break;
+                case 'int':
+                    stat = "intelligence"
+                    break;
+                    case 'wis':
+                        stat = "wisdom"
+                        break;
+                        case 'cha':
+                            stat = "charisma"
+                            break;
+        default:
+          stat = ''
+      }
+      return(
+        <div className="flex flex-col justify-center">
+        <p className="font-bold text-center uppercase modesto-regular">{val}</p>
+<p className="text-center font-bold">{data[stat]}</p>
+    </div>
+      )
+  }
+
+  function returnFacts(type, property){
+    let string = ''
+    if (property == undefined || property == '' || property.length == 0){
+      return null
+  } else if (typeof property == "string"){
+        string = property
+    } else if (Array.isArray(property)){
+        if (typeof property[0] == 'object'){
+          property.forEach(function(item){
+              string += item.name + ', '
+          })
+        } else {
+          string = property.join(', ')
+        }
+    } else if (typeof property == 'object'){
+        string = cleanEntries(property).replace('_', ' ')
+    }
+
+    console.log()
+
+    let block = <div className="flex px-4 items-start">
+    <p className="petrona-bold text-bold pr-2 font-bold text-sm inline">{type}</p>
+    <p className="text-sm font-thin inline">{string}</p>
+   </div>
+    return (
+      block
+    )
+}
+
+  function returnProficencies(property){
+      let newArray = []
+      if (property == undefined || property == '' || property.length == 0){
+        return null
+    } else {
+      property.forEach(function(item){
+        newArray.push(item.proficiency.name)
+    })
+    }
+      let block = <div className="flex px-4 items-start">
+      <p className="petrona-bold text-bold font-bold text-sm inline">Proficiencies: <p className="text-sm font-thin inline pl-2">{newArray.join(', ')}</p></p>
+
+     </div>
+      return (
+        block
+      )
+  }
+
+  function returnActions(property){
+    let string = ''
+    let newArr = []
+    if (property == undefined || property == '' || property.length == 0){
+      return null
+  } else if (typeof property == "string"){
+        string = property
+    } else if (Array.isArray(property)){
+        if (typeof property[0] == 'object'){
+
+          property.forEach(function(item, index){
+            let block = <div key={index} className="flex px-4 items-start pb-2 inline">
+
+          <p className="text-sm font-thin inline"><p className="petrona-bold font-semibold inline italic pr-2 inline">{item.name}.</p> {item.desc}</p>
+           </div>
+                      newArr.push(block)
+          })
+        } else {
+          string = property.join(', ')
+        }
+    } else if (typeof property == 'object'){
+        string = cleanEntries(property).replace('_', ' ')
+    }
+    return (
+      newArr
+    )
+}
+
 
   return (
-    <div className="flex w-full p-10 items-center justify-center flip">
-      <div
-      id="card"
-        style={{ height: "500px", width: "400px" }}
-        className="bg-white w-full rounded -md border-gray-200 border shadow-lg p-2 flip-content"
+    <div
+    id="card" className="flex w-full py-2 px-20 items-center justify-center relative flex-col">
+     <div className="w-full flex flex-row justify-between">
+     <a target="_blank" href={goToGoogleImageSearch(myName)}>
+     <GoogleButton
+        variant="contained"
       >
-        <div className="flip-front flex w-full h-full flex-col p-6 pt-10 left-0 top-0">
-          <div
-            style={{
-                width: '200px',
-                backgroundImage: `url(${profileImg})`,
-              borderRadius: "100%",
-              marginTop:'-50px',
-              boxShadow: 'inset 0px 0px 30px rgba(0,0,0,0.9)',
-
-            }}
-            className="self-center h-56 bg-cover bg-no-repeat bg-top border shadow-xl"
-          />
-          <div className="flex flex-row justify-between m-2 items-start">
-            <div className="w-full">
-              <div className="w-full justify-between flex flex-row">
-                <p className="flex flex-1 font-bold">{data.name}</p>
-        <p className="mx-1 text-xs">{`${data.xp} xp`}</p>
-              </div>
-
-              <div className="flex flex-row justify-between w-full">
-                <p className="text-xs capitalize">{`${data.size} ${data.type}`}</p>
-        <p className="text-xs capitalize">{data.alignment}</p>
-              </div>
-            </div>
-          </div>
-          <div
-            className="flex flex-row items-start justify-between left-0 absolute top-0 w-full p-2"
-            style={{ backfaceVisibility: "hidden" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="54"
-              height="54"
-              fill="gray"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 0c-3.436-.012-6.928 1.225-9 3v11.536c0 4.602 3.204 5.803 9 9.464 5.796-3.661 9-4.863 9-9.464v-11.536c-2.072-1.775-5.564-3.012-9-3z" />{" "}
-              <text
-                className="text-xs"
-                x="50%"
-                y="50%"
-                dominantBaseline="middle"
-                textAnchor="middle"
-                fill="white"
-              >
-                {data.armor_class}
-              </text>{" "}
-            </svg>
-
-            {/* <p>Challenge 2</p> */}
-            <div className="flex flex-row">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="54"
-                height="54"
-                viewBox="0 0 24 24"
-                fill="crimson"
-              >
-                <path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z" />
-                <text
-                  className="text-xs"
-                  x="50%"
-                  y="50%"
-                  dominantBaseline="middle"
-                  textAnchor="middle"
-                  fill="white"
-                >
-                  {data.hit_points}
-                </text>
-              </svg>
-            </div>
-          </div>
-
-          <div className="w-full">
-            <div className="flex flex-row justify-between">
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100">
-                <p className="text-xs text-center">STR</p>
-        <p className="text-sm text-center">{data.strength}</p>
-              </div>
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100 shadow-sm">
-                <p className="text-xs text-center">DEX</p>
-                <p className="text-sm text-center">{data.dexterity}</p>
-              </div>
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100 shadow-sm">
-                <p className="text-xs text-center">CON</p>
-        <p className="text-sm text-center">{data.constitution}</p>
-              </div>
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100 shadow-sm">
-                <p className="text-xs text-center">INT</p>
-                <p className="text-sm text-center">{data.intelligence}</p>
-              </div>
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100 shadow-sm">
-                <p className="text-xs text-center">WIS</p>
-                <p className="text-sm text-center">{data.wisdom}</p>
-              </div>
-              <div className="w-full mx-1 justify-center border rounded p-2 bg-orange-100 shadow-sm">
-                <p className="text-xs text-center">CHA</p>
-                <p className="text-sm text-center">{data.charisma}</p>
-              </div>
-            </div>
-            <div className="p-5">
-              <p className="text-xs">Walk: 30 ft., Burrow: 10 ft.</p>
-            </div>
-            <div className="flex flex-row w-full items-center justify-between absolute bottom-0 left-0 p-5">
-              <div className="flex flex-1 items-center">
-                <div className="border rounded-md w-10 h-10 justify-center items-center flex shadow-sm">
-                  <p>24</p>
-                </div>
-        <p className="text-xs text-left pl-3">{data.hit_dice}</p>
-              </div>
-              <button
-              onClick={()=>flipCard()}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                <span className="pr-3">Actions</span>
-                {chevronRight}
-              </button>
-            </div>
-          </div>
+        <div className="flex items-center">
+        <p className="pr-1">Find Image</p>
+        {images}
         </div>
-        <div className="flip-back flip-back flex w-full h-full flex-col left-0 top-0">
-          <p>hey</p>
-          <div className="absolute bottom-0 left-0 justify-end flex p-5 w-full">
-          <button
-              onClick={()=>flipCard(true)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                <span className="pr-3">Profile</span>
-                {chevronRight}
-              </button>
-          </div>
+      </GoogleButton>
+     </a>
+      <SaveButton
+      onClick={()=>saveThisCard(data)}
+        variant="contained"
+        color="primary"
+      >
+        <div className="flex items-center">
+        <p>Save card</p>
+        <DoubleArrowIcon fontSize="small" />
+        </div>
+      </SaveButton>
 
+     </div>
+
+      <div
+        onClick={() => console.log(data.name)}
+        className="shadow-xl flex w-full bg-red-600 p-5 mx-10 my-2 rounded"
+      >
+        <div className="flex w-full justify-center items-center relative  flex-col">
+          <p className="text-center modesto-condensed uppercase text-4xl font-bold self-center bg-orange-200 w-full rounded-br-none rounded-bl-none rounded-lg py-2">
+            {myName}
+          </p>
+
+          <p className="text-white text-center py-1">
+            {data.size} {data.subtype !== null && `(${data.subtype})`} {data.type}, {data.alignment}
+          </p>
+
+          <div className=" bg-orange-200 w-full rounded-tr-none rounded-tl-none rounded-lg py-2">
+            <div className="flex flex-row">
+              <div className="flex flex-1 px-4">
+                <p className="font-bold pr-2">AC:</p> {data.armor_class}
+              </div>
+              <div className="flex flex-1">
+                <p className="font-bold pr-2">HP:</p>
+                <p>{`${data.hit_points} (${data.hit_dice})`}</p>
+              </div>
+            </div>
+            <div className="px-4 flex flex-row">
+                <p className="font-bold pr-2 text-sm pr-2">Speed:</p>
+
+                <p className="text-sm"> {returnSpeed(data.speed)}</p>
+            </div>
+            <div className="flex w-full px-4 py-2 justify-between">
+                {stats.map(x=>returnStat(x))}
+            </div>
+            <div className="bg-orange-200 border-t-2 border-red-500 py-2">
+                {returnFacts("Languages: ",
+                data.languages)}
+                {returnFacts("Condition immunities: ",
+                data.condition_immunities)}
+                {returnFacts("Damage immunities: ",
+                data.damage_immunities)}
+
+                 {returnFacts("Damage resistances: ",
+                data.damage_resistances)}
+                {returnFacts("Damage vulnerablities: ",
+                data.damage_vulnerabilities)}
+                {returnProficencies(data.proficiencies)}
+                {returnFacts("Senses: ",
+                data.senses)}
+
+            </div>
+            <div className="bg-orange-200 border-t-2 border-red-500 py-2">
+                <p className="px-4 text-md font-bold modesto-regular uppercase">Actions</p>
+                {returnActions(data.actions)}
+            </div>
+          </div>
+        <div className="flex w-full flex-row justify-between items-center">
+  <p className="text-left text-white font-bold modesto-condensed text-3xl">Challenge {Math.round(data.challenge_rating)} {`(${data.xp} XP)`}</p>
+        </div>
         </div>
       </div>
     </div>

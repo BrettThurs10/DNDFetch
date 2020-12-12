@@ -160,7 +160,7 @@ function Filters(props){
 
 
     return(
-        <div className="flex w-1/2">
+        <div className="flex w-full">
             <div className="flex w-full flex-col">
               <ul className="flex border-b">
                 <li className="-mb-px mr-1">
