@@ -29,95 +29,31 @@ const eye = <FontAwesomeIcon icon={faEye} />;
 const speed = <FontAwesomeIcon icon={faShoePrints} />
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />
 
+function getVal(id){
+  const val = document.getElementById(id)
+  return val ? parseInt(val.value) : null
+}
 
 function Filters(props){
     const [isLoaded, setIsLoaded] = useState(false);
     const [data, setData] = useState([]);
     const [error, setError] = useState(null);
-    const [profileImg, setProfileImg] = useState(null)
+    const [cardLibrary, setCardLibrary] = useState(props.cardLibrary)
     const [queryType, setQueryType] = useState('monsters')
-    const [monsterType, setMonsterType] = useState("");
-    const [monsterSize, setMonsterSize] = useState('');
-    const [monsterAlignment, setMonsterAlignment] = useState('');
+    const [quantity, setQuantity] = useState(getVal('quantity'))
 
-    async function setImgFromFetch(thing, imageSet, pageID){
-        console.log(imageSet)
-        console.log(thing)
-        let filePath;
-
-       if (imageSet !== undefined){
-           console.log('img set')
-           console.log(imageSet)
-        Object.values(imageSet).some(async x=>{
-            let item = Object.values(x)[1];
-            let imageInfoURL;
-          if (item !== undefined){
-            if (item.search('5e') !== -1){
-                console.log(item)
-                filePath = item
-                imageInfoURL = `https://evening-fjord-19580.herokuapp.com/https://forgottenrealms.fandom.com/api.php?action=query&titles=${filePath}&prop=imageinfo&iilimit=50&iiend=2007-12-31T23:59:59Z&iiprop=url&format=json
-                `;
-            } else if (item.search('4e') !== -1){
-               console.log(item)
-               filePath = item
-               imageInfoURL = `https://evening-fjord-19580.herokuapp.com/https://forgottenrealms.fandom.com/api.php?action=query&titles=${filePath}&prop=imageinfo&iilimit=50&iiend=2007-12-31T23:59:59Z&iiprop=url&format=json
-               `;
-
-            } else if (item.search('3e') !== -1)
-            console.log(item)
-            filePath = item
-            imageInfoURL = `https://evening-fjord-19580.herokuapp.com/https://forgottenrealms.fandom.com/api.php?action=query&titles=${filePath}&prop=imageinfo&iilimit=50&iiend=2007-12-31T23:59:59Z&iiprop=url&format=json
-            `;
-          } else {
-            filePath = item
-          }
-
-
-          console.log(imageInfoURL)
-          await fetch(imageInfoURL)
-          .then((res) => res.json())
-          .then(
-            async (result) => {
-                console.log('shabo')
-                let id = Object.keys(result.query.pages)[0]
-                console.log(result)
-                let img;
-
-                if (result.query.pages[id].imageinfo[0]){
-                    img = result.query.pages[id].imageinfo[0].url;
-                    img = img.substring(0, img.indexOf("/revision"));
-                    console.log(img)
-                    props.setProfileImg(img)
-                } else {
-                    img = null
-                    console.log(img)
-                }
-
-
-            }
-          )
-          })
-       }
-
+    function range(start, end) {
+      return Array(end - start + 1).fill().map((_, idx) => start + idx)
     }
 
-    async function getQuery(){
-        let url = `https://www.dnd5eapi.co/api/${queryType}`;
-        await fetch(url)
-          .then((res) => res.json())
-          .then(
-            async (result) => {
-              setIsLoaded(true);
+    async function getDetail(res){
+      let randomNum = Math.floor(Math.random() * Object.keys(res).length + 1);
 
-              let res = result.results
+      let randomChoice = res[randomNum].index
 
-              let randomNum = Math.floor(Math.random() * Object.keys(res).length + 1);
+      let randomURL = `https://www.dnd5eapi.co/api/${queryType}/${randomChoice}`
 
-              let randomChoice = res[randomNum].index
-
-              let randomUrl = `https://www.dnd5eapi.co/api/${queryType}/${randomChoice}`
-
-              await fetch(randomUrl)
+      await fetch(randomURL)
                 .then((res) => res.json())
                 .then((res) => {
                  setData(res)
@@ -137,8 +73,26 @@ function Filters(props){
                     subtype = utils.race[randomNum]
                 }
                  props.setData(res)
-                 console.log(res)
+                 setIsLoaded(true);
+                 props.isLoaded(true)
                 });
+    }
+
+    async function getQuery(){
+      const challenge = range(getVal('challengeMin'), getVal('challengeMax'));
+      let url = `https://www.dnd5eapi.co/api/${queryType}/?challenge_rating=${challenge}`;
+      console.log(url)
+        await fetch(url)
+          .then((res) => res.json())
+          .then(
+            async (result) => {
+              let res = result.results
+              if (res){
+                getDetail(res)
+              } else {
+                console.log(`error`)
+                console.log(result)
+              }
             },
             // Note: it's important to handle errors here
             // instead of a catch() block so that we don't swallow
@@ -198,89 +152,29 @@ function Filters(props){
                 </li>
               </ul>
               <div className="bg-white w-full h-full flex rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative">
-                <p className="title text-3xl text-left">Monsters</p>
+                <p className="title text-3xl text-left modesto-condensed uppercase">Monsters</p>
                 <div className="my-3">
-                <div className="flxex flex-row w-3/4 mb-5">
-                  <form
-                    className="flex justify-start"
+                <form
+                    className="flex justify-start flex-col"
                     noValidate
                     autoComplete="off"
                   >
                     <TextField
-
-                      id="outlined-basic"
+                      id="challengeMin"
                       label="Challenge min"
-                      variant="outlined"
+                      variant="filled"
+                      defaultValue="0"
                     />
                     <div className="px-2" />
                      <TextField
-                      id="outlined-basic"
+                      id="challengeMax"
                       label="Challenge max"
-                      variant="outlined"
+                      variant="filled"
+                      defaultValue="30"
                     />
                   </form>
 
-                </div>
-<div className="flex flex-row w-full mb-5 justify-start">
-                <FormControl variant="outlined" className="flex w-1/2 text-left">
-                  <InputLabel
-                  id="demo-simple-select-outlined-label">
-                    Type
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={monsterType}
-                    onChange={(event) => setMonsterType(event.target.value)}
-                    label="Type"
-                  >
-                   {utils.monsterArray.map(x=>(
-                     <MenuItem
-                     key={x}
-                     className="text-left" value={x}>{x}</MenuItem>
-                   ))}
-                  </Select>
-                </FormControl>
-                <div className="px-2" />
-                <FormControl variant="outlined" className="flex w-1/2  text-left">
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Size
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={monsterSize}
-                    onChange={(event) => setMonsterSize(event.target.value)}
-                    label="Type"
-                  >
-                   {utils.monsterSizeArray.map(x=>(
-                     <MenuItem
-                     key={x}
-                     className="text-left" value={x}>{x}</MenuItem>
-                   ))}
-                  </Select>
-                </FormControl>
-                </div>
-                <div className="w-full flex justify-start flex-row">
-                <FormControl variant="outlined" className="flex w-1/2 self-start  text-left">
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    Alignment
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={monsterAlignment}
-                    onChange={(event) => setMonsterAlignment(event.target.value)}
-                    label="Type"
-                  >
-                   {utils.monsterAlignmentArray.map(x=>(
-                     <MenuItem
-                     key={x}
-                     className="text-left" value={x}>{x}</MenuItem>
-                   ))}
-                  </Select>
-                </FormControl>
-                </div>
+
                 </div>
                 <button
                 onClick={()=>getQuery()}

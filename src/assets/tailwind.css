@@ -10,6 +10,16 @@
 
 @import url("https://use.typekit.net/zhy1gfi.css");
 
+@import 'loaders.css/src/animations/line-scale.scss';
+
+.loader-hidden {
+  display: none;
+}
+
+.loader-active {
+  display: block;
+}
+
 .petrona{
   font-family: 'Petrona', serif;
   font-weight: 400;

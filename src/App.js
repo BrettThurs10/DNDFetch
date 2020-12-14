@@ -12,10 +12,12 @@ function App() {
   const [data, setData] = useState('');
   const [conditions, setConditions] = useState(null);
   const [cardLibrary, setCardLibrary] = useState([]);
-  const [refresh, setRefresh] = useState(true)
+  const [refresh, setRefresh] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(()=>{
   getConditions()
+  console.log(`is loaded ${isLoaded}`)
   }, [])
 
   function handleSaveCard(cardObj){
@@ -88,6 +90,7 @@ if (condition !== null){
       if (obj.name == name){
         setData(obj)
         setRefresh(!refresh)
+        setIsLoaded(true)
         console.log(obj)
         return false
       }
@@ -99,7 +102,9 @@ if (condition !== null){
     <div className="flex h-screen overflow-hidden">
       <div className="flex flex-row w-full">
       <div className="flex w-1/4 bg-blue-200 flex-row">
-]        <Filters setData={(val)=>setData(val)}  />
+        <Filters
+isLoaded={(value)=>setIsLoaded(value)}
+setData={(val)=>setData(val)}  />
 
         </div>
         <div
@@ -110,6 +115,7 @@ if (condition !== null){
         }}
         className="w-1/2 bg-red-200 overflow-y-scroll">
           <Card
+          isLoaded={isLoaded}
           refresh={!refresh}
           cardLibrary={cardLibrary}
           saveThisCard={(cardObj)=>handleSaveCard(cardObj)}

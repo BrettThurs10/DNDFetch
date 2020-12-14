@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from '@material-ui/core/Button';
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
+import Save from '@material-ui/icons/Save';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faImages, faChevronRight, faSave } from "@fortawesome/free-solid-svg-icons";
-import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { green, purple } from '@material-ui/core/colors';
 
+
 library.add(faChevronRight, faImages, faSave);
-const chevronRight = <FontAwesomeIcon icon={faChevronRight} />;
 const images = <FontAwesomeIcon className="text-lg" icon={faImages} />;
-const save = <FontAwesomeIcon icon={faSave} />
 
 function Card(props) {
   const [error, setError] = useState("");
   const [data, setData] = useState(props.data);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(props.isLoaded);
   const [refresh, setRefresh] = useState(props.refresh)
 
   useEffect(() => {
     setData(props.data);
     setRefresh(props.refresh)
-
   });
+
 
   const GoogleButton = withStyles((theme) => ({
     root: {
@@ -201,39 +201,9 @@ function Card(props) {
     )
 }
 
-
-  return (
-    <div
-    id="card" className="flex w-full py-2 px-20 items-center justify-center relative flex-col">
-     <div className="w-full flex flex-row justify-between">
-     <a target="_blank" href={goToGoogleImageSearch(myName)}>
-     <GoogleButton
-        variant="contained"
-      >
-        <div className="flex items-center">
-        <p className="pr-1">Find Image</p>
-        {images}
-        </div>
-      </GoogleButton>
-     </a>
-      <SaveButton
-      onClick={()=>saveThisCard(data)}
-        variant="contained"
-        color="primary"
-      >
-        <div className="flex items-center">
-        <p>Save card</p>
-        <DoubleArrowIcon fontSize="small" />
-        </div>
-      </SaveButton>
-
-     </div>
-
-      <div
-        onClick={() => console.log(data.name)}
-        className="shadow-xl flex w-full bg-red-600 p-5 mx-10 my-2 rounded"
-      >
-        <div className="flex w-full justify-center items-center relative  flex-col">
+function returnCardBody(){
+  return(
+    <div className="flex w-full justify-center items-center relative  flex-col">
           <p className="text-center modesto-condensed uppercase text-4xl font-bold self-center bg-orange-200 w-full rounded-br-none rounded-bl-none rounded-lg py-2">
             {myName}
           </p>
@@ -286,7 +256,44 @@ function Card(props) {
   <p className="text-left text-white font-bold modesto-condensed text-3xl">Challenge {Math.round(data.challenge_rating)} {`(${data.xp} XP)`}</p>
         </div>
         </div>
-      </div>
+
+  )
+}
+
+
+  return (
+    <div
+    id="card" className="flex w-full py-2 px-24 items-center justify-center relative flex-col">
+     <div className="w-full flex flex-row justify-between">
+     <a target="_blank" href={goToGoogleImageSearch(myName)}>
+     <GoogleButton
+        variant="contained"
+      >
+        <div className="flex items-center">
+        <p className="pr-1">Images</p>
+        {images}
+        </div>
+      </GoogleButton>
+     </a>
+      <SaveButton
+      onClick={()=>saveThisCard(data)}
+        variant="contained"
+        color="primary"
+        className="min-w-0"
+      >
+        Save
+   <Save fontSize="small" />
+      </SaveButton>
+
+     </div>
+
+      <div
+        onClick={() => console.log(data.name)}
+        className={`shadow-xl flex w-full bg-red-600 p-5 mx-10 my-2 rounded ${data ? "h-auto" : 'h-screen'}`}
+      >
+        {/* {renderLoader()} */}
+        {data ? returnCardBody() : null}
+    </div>
     </div>
   );
 }
