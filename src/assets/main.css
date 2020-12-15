@@ -19206,6 +19206,13 @@ video {
 
 @import url("https://use.typekit.net/zhy1gfi.css");
 
+.loader-hidden {
+  display: none;
+}
+
+.loader-active {
+  display: block;
+}
 
 .petrona{
   font-family: 'Petrona', serif;

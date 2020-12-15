@@ -13,15 +13,16 @@ function App() {
   const [conditions, setConditions] = useState(null);
   const [cardLibrary, setCardLibrary] = useState([]);
   const [refresh, setRefresh] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [activePanel, setActivePanel] = useState('monsters')
 
   useEffect(()=>{
   getConditions()
-  console.log(`is loaded ${isLoaded}`)
   }, [])
 
   function handleSaveCard(cardObj){
     let array = cardLibrary;
+    cardObj.cardType = activePanel;
     array.push(cardObj);
     setCardLibrary(array)
     setRefresh(!refresh)
@@ -97,12 +98,18 @@ if (condition !== null){
     })
   }
 
+  function handlePanelChange(val){
+    setActivePanel(val)
+    setRefresh(!refresh)
+  }
+
 
   return (
     <div className="flex h-screen overflow-hidden">
       <div className="flex flex-row w-full">
-      <div className="flex w-1/4 bg-blue-200 flex-row">
+      <div className="flex w-1/4 bg-gray-900 flex-row">
         <Filters
+        setActivePanel={(val)=>handlePanelChange(val)}
 isLoaded={(value)=>setIsLoaded(value)}
 setData={(val)=>setData(val)}  />
 
@@ -115,6 +122,7 @@ setData={(val)=>setData(val)}  />
         }}
         className="w-1/2 bg-red-200 overflow-y-scroll">
           <Card
+          activePanel={activePanel}
           isLoaded={isLoaded}
           refresh={!refresh}
           cardLibrary={cardLibrary}
