@@ -337,13 +337,11 @@ function Card(props) {
     );
   }
 
-  function returnCardBody() {
-    console.log("return card ody");
-    console.log(activePanel);
-    if (activePanel == "monsters") {
+  function returnCardBody(cardType) {
+
+    if (cardType == "monsters") {
       return monsterCardBody();
-    } else if (activePanel == "loot") {
-      console.log("active panel is loot");
+    } else if (cardType == "loot") {
       return lootCardBody();
     }
   }
@@ -368,7 +366,7 @@ function Card(props) {
       </div>
     );
   }
-
+console.log(data)
   return (
     <div
       id="card"
@@ -382,7 +380,7 @@ function Card(props) {
         }`}
       >
         {/* {renderLoader()} */}
-        {data ? returnCardBody() : null}
+        {data ? returnCardBody(data.cardType) : null}
       </div>
     </div>
   );

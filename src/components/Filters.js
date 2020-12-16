@@ -68,7 +68,7 @@ function Filters(props){
 
 
 
-    async function getDetail(res){
+    async function getDetail(res, cardType){
 
       let randomNum = Math.floor(Math.random() * Object.keys(res).length + 1);
       if (panel == 'loot'){
@@ -94,6 +94,9 @@ function Filters(props){
                 .then((res) => res.json())
                 .then((res) => {
                   console.log(res)
+                  if (cardType !== undefined){
+                    res.cardType = cardType
+                  }
                  setData(res)
                 if (panel == 'monsters'){
                   let subtype = res.subtype;
@@ -119,7 +122,7 @@ function Filters(props){
                 });
     }
 
-    async function getQuery(){
+    async function getQuery(cardType){
       // console.log(panel)
       setControls(false)
       await props.setActivePanel(panel)
@@ -145,7 +148,7 @@ if (panel == 'monsters'){
               }
               // console.log(res)
               if (res){
-                getDetail(res)
+                getDetail(res, cardType)
               } else {
                 console.log(`error`)
                 console.log(result)
@@ -166,7 +169,7 @@ if (panel == 'monsters'){
 
 
     useEffect(()=>{
-        getQuery();
+        getQuery('monsters');
         makeLootItems();
     }, [])
 
@@ -443,7 +446,7 @@ if (panel == 'monsters'){
                 {determinePanel()}
                 <button
                 disabled={disabled}
-                onClick={()=>getQuery()}
+                onClick={()=>getQuery(panel)}
                 className={`bg-gray-300 hover:bg-gray-200 text-green-800 font-bold py-2 px-4 rounded md:absolute bottom-0 right-0 my-3 md:m-8 flex flex-row items-center ${disabled && 'opacity-25'}`}>
  <p className="mr-3"> Fetch it</p> {chevronRight}
 </button>
