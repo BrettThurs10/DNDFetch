@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -17,7 +16,11 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as utils from '../assets/utils.js';
-import archmage from '../img/archmage.jpg';
+import {ReactComponent as Skull} from "../img/skull.svg";
+import {ReactComponent as Loot} from "../img/treasure.svg";
+import {ReactComponent as Spells} from "../img/witch-hat.svg";
+import {ReactComponent as Conditions} from "../img/brain.svg";
+import { red, purple, orange, blue, green } from "@material-ui/core/colors";
 
 
 library.add(faSpider, faCoins, faMagic, faEye, faShoePrints);
@@ -30,8 +33,12 @@ const speed = <FontAwesomeIcon icon={faShoePrints} />
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />
 
 function getVal(id){
-  const val = document.getElementById(id)
-  return val ? parseInt(val.value) : null
+
+  let val = document.getElementById(id)?.value
+  if (id == '' ){
+    val = '0'
+  }
+  return parseInt(val)
 }
 
 function Filters(props){
@@ -44,10 +51,20 @@ function Filters(props){
     const [loot, setLoot] = useState('Adventuring Gear')
     const [minError, setMinError] = useState(false)
     const [maxError, setMaxError] = useState(false)
+    const [challengeMin, setChallengeMin] = useState('')
+    // Set to false so when getQuery first runs it will show the search panel in mobile - desktop doesn't utilize show/hide for search panel
+    const [controlsVisible, setControls] = useState(false)
 
     function range(start, end) {
-      return Array(end - start + 1).fill().map((_, idx) => start + idx)
-    }
+      if (start == undefined || isNaN(start)){
+        start = 0
+      }
+      if (end == undefined || isNaN(end)){
+        end = 30
+      }
+      console.log(`start ${start} end ${end}`)
+       return Array(end - start + 1).fill().map((_, idx) => start + idx)
+     }
 
 
 
@@ -104,10 +121,11 @@ function Filters(props){
 
     async function getQuery(){
       // console.log(panel)
+      setControls(false)
       await props.setActivePanel(panel)
 let url;
 if (panel == 'monsters'){
-  const challenge = range(getVal('challengeMin'), getVal('challengeMax'));
+  const challenge = range(getVal('challengeMin') ?? 0, getVal('challengeMax') ?? 30);
   url = `https://www.dnd5eapi.co/api/monsters/?challenge_rating=${challenge}`;
 } else if (panel == 'loot'){
   console.log (`loot is set to ${loot}`)
@@ -153,7 +171,17 @@ if (panel == 'monsters'){
     }, [])
 
     function validateChallenges(type, number){
-      if (type=='min' && parseInt(number) > getVal('challengeMax')){
+
+      let minValue = getVal('challengeMin')
+      let maxValue = getVal('challengeMax')
+      if (isNaN(minValue)){
+        minValue = 0
+      }
+      if (isNaN(maxValue)){
+        maxValue = 30
+      }
+
+      if (type=='min' && parseInt(number) >= maxValue){
         setMinError(true)
         setDisabled(true)
       } else {
@@ -161,38 +189,57 @@ if (panel == 'monsters'){
         setDisabled(false)
       }
 
-      if (type == 'max' && parseInt(number) < getVal('challengeMin')){
+      if (type == 'max' && parseInt(number) <= minValue){
         setMaxError(true)
         setDisabled(true)
       } else {
         setMaxError(false)
         setDisabled(false)
       }
+
+
     }
+
+    function handleChallenge(type, string){
+      validateChallenges(type, string)
+      if (type == 'min'){
+        setChallengeMin(string)
+      }
+    }
+
 
     function monsterPanel(){
       return(
         <>
-      <p className="title text-3xl text-left modesto-condensed uppercase">Monsters</p>
-                <div className="my-3 w-full">
+     <div className="flex flex-row items-center">
+       <Skull fill="black" className="h-6 w-6 mr-2" />
+     <p className="title text-3xl text-left modesto-condensed uppercase">Monsters</p>
+       </div>
+                <div className="my-3 w-full flex flex-row items-center">
                 <form
-                    className="flex justify-start flex-col"
+                    className="flex justify-start flex-col md:py-2 w-1/2 md:w-full"
                     noValidate
                     autoComplete="off"
                   >
                     <TextField
-                    helperText={minError && 'Number cannot exceed the challenge max number.'}
+                    helperText={minError && 'Number cannot exceed or be the challenge max number.'}
                       error={minError}
                       id="challengeMin"
+                      placeholder="0"
                       label="Challenge min"
                       variant="outlined"
                       defaultValue="0"
                       onChange={(e)=>validateChallenges('min', e.target.value)}
-                    />
-                    <div className="p-2" />
+                    /></form>
+          <form
+                    className="flex justify-start flex-col w-1/2 md:w-full"
+                    noValidate
+                    autoComplete="off"
+                  >
                      <TextField
                       helperText={maxError && 'Number cannot be below the challenge min number.'}
                      error={maxError}
+                     placeholder="30"
                       id="challengeMax"
                       label="Challenge max"
                       variant="outlined"
@@ -237,11 +284,14 @@ if (panel == 'monsters'){
     function lootPanel(){
       return(
         <>
-      <p className="title text-3xl text-left modesto-condensed uppercase">Loot</p>
-
-                <FormControl variant="outlined" className="flex w-full" >
+   <div className="flex flex-row items-center">
+       <Loot fill="black" className="h-6 w-6 mr-2" />
+     <p className="title text-3xl text-left modesto-condensed uppercase">Loot</p>
+       </div>
+                <FormControl className="flex w-full" >
         <InputLabel id="loot-label"></InputLabel>
         <Select
+        variant="outlined"
         className="flex w-full"
           labelId="loot"
           id="loot"
@@ -262,8 +312,10 @@ if (panel == 'monsters'){
     function spellsPanel(){
       return(
         <>
-      <p className="title text-3xl text-left modesto-condensed uppercase">Spells</p>
-                <div className="my-3">
+   <div className="flex flex-row items-center">
+       <Spells fill="black" className="h-6 w-6 mr-2" />
+     <p className="title text-3xl text-left modesto-condensed uppercase">Spells</p>
+       </div>                <div className="my-3">
                 <p>Coming soon.</p>
 
 
@@ -277,8 +329,10 @@ if (panel == 'monsters'){
     function conditionsPanel(){
       return(
         <>
-      <p className="title text-3xl text-left modesto-condensed uppercase">Conditions</p>
-                <div className="my-3">
+   <div className="flex flex-row items-center">
+       <Conditions fill="black" className="h-6 w-6 mr-2" />
+     <p className="title text-3xl text-left modesto-condensed uppercase">Conditions</p>
+       </div>                <div className="my-3">
                 <p>Coming soon.</p>
 
 
@@ -302,6 +356,13 @@ if (panel == 'monsters'){
 
     function handlePanelChange(val){
       console.log(val)
+      console.log(panel)
+      if (panel == val){
+        setControls(!controlsVisible)
+      } else {
+        setControls(true)
+      }
+
      if (val == 'monsters' || val == 'loot'){
        setDisabled(false)
      } else {
@@ -312,67 +373,78 @@ if (panel == 'monsters'){
 
     function determinePanelBG(){
       if(panel == 'monsters'){
-        return 'bg-purple-400'
+        return {background: purple[300]}
       } else if (panel == 'loot'){
-        return 'bg-orange-400'
+        return {background: orange[300]}
       } else if ( panel == 'spells'){
-        return 'bg-blue-400'
+        return {background: blue[300]}
       } else if (panel == 'conditions'){
-        return 'bg-gray-400'
+        return {background: green[300]}
       }
     }
 
 
     return(
-        <div className="flex w-full">
+        <div
+
+        className="flex w-full h-full md:h-screen">
+
             <div className="flex w-full flex-col">
-              <ul className="flex border-b">
+              <ul className="flex border-b justify-center md:justify-start">
                 <li className={`${panel== 'monsters' && '-mb-px'} mr-1`}>
                   <a
-                    className="bg-purple-400 inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
+
+                    className={`monster-button
+                     inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold -mb-px
+                    `}
                     href="#"
                     onClick={()=>handlePanelChange('monsters')}
                   >
-                    {spider}
+                    <Skull className="w-6 h-6" />
                   </a>
                 </li>
                 <li className={`${panel== 'loot' && '-mb-px'} mr-1`}>
                   <a
-                    className="bg-orange-400 inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold rounded-t"
+                    className={` loot-button
+                   inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold border-l border-t border-r rounded-t ${panel == 'loot' && 'border-b-0'}
+                    `}
                     href="#"
                     onClick={()=>handlePanelChange('loot')}
                   >
-                    {coins}
+                    <Loot className="w-6 h-6 text-gray-600" />
                     {/* <p>Monster</p> */}
                   </a>
                 </li>
                 <li className={`${panel== 'spells' && '-mb-px'} mr-1`}>
                   <a
-                    className="bg-blue-400 inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold rounded-t"
+                    className={` inline-block py-2 px-4 text-blue-500 spells-button
+                    border-l border-t border-r hover:text-blue-800 font-semibold rounded-t ${panel == 'spells' && 'border-b-0'}`}
                     href="#"
                     onClick={()=>handlePanelChange('spells')}
 
                   >
-                    {magic}
+                    <Spells className="h-6 w-6" />
                   </a>
                 </li>
                 <li className={`${panel== 'conditions' && '-mb-px'} mr-1`}>
                   <a
-                    className="bg-gray-400 inline-block py-2 px-4 text-blue-500 font-semibold rounded-t"
+                    className={`inline-block py-2 px-4 text-blue-500 conditions-button font-semibold rounded-t border-l border-t border-r ${panel == 'conditions' && 'border-b-0'}`}
                     href="#"
                     onClick={()=>handlePanelChange('conditions')}
 
                   >
-                    {eye}
+                    <Conditions className="h-6 w-6" />
                   </a>
                 </li>
               </ul>
-              <div className={`${determinePanelBG()} w-full h-full flex rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative`}>
+              <div
+              style={determinePanelBG()}
+              className={`${controlsVisible == false && 'hidden '} md:flex w-full h-full flex rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative -mt-2`}>
                 {determinePanel()}
                 <button
                 disabled={disabled}
                 onClick={()=>getQuery()}
-                className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute bottom-0 right-0 m-8 flex flex-row items-center ${disabled && 'opacity-25'}`}>
+                className={`bg-gray-300 hover:bg-gray-200 text-green-800 font-bold py-2 px-4 rounded md:absolute bottom-0 right-0 my-3 md:m-8 flex flex-row items-center ${disabled && 'opacity-25'}`}>
  <p className="mr-3"> Fetch it</p> {chevronRight}
 </button>
               </div>

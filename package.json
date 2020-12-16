@@ -1,6 +1,7 @@
 {
   "name": "fetchdnd",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
+    "file-loader": "^6.2.0",
     "postcss-cli": "^8.1.0",
     "tailwindcss": "^1.9.6"
   }

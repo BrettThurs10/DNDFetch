@@ -19206,12 +19206,44 @@ video {
 
 @import url("https://use.typekit.net/zhy1gfi.css");
 
-.loader-hidden {
-  display: none;
+html, body{
+  background-color: rgb(18, 19, 19);
 }
 
-.loader-active {
-  display: block;
+.conditions-button{
+  background:rgb(129, 199, 132)
+}
+
+.conditions-button:hover{
+  background:rgb(154, 236, 158)
+}
+
+.spells-button{
+  background:rgb(100, 181, 246)
+}
+
+.spells-button:hover{
+  background:rgb(150, 208, 255)
+}
+
+.loot-button{
+  background:rgb(255, 183, 77)
+}
+
+.loot-button:hover{
+  background: #ffcc80
+}
+
+.monster-button{
+  background: rgb(186, 104, 200)
+}
+
+.monster-button:hover{
+  background: #ce93d8
+}
+
+.MuiFormHelperText-root.Mui-error, .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline{
+  color: darkred
 }
 
 .petrona{
