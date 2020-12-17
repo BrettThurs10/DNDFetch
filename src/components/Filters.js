@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faSpider,
-  faCoins,
-  faMagic,
-  faEye,
   faChevronRight,
-  faShoePrints
 } from "@fortawesome/free-solid-svg-icons";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -23,13 +18,8 @@ import {ReactComponent as Conditions} from "../img/brain.svg";
 import { red, purple, orange, blue, green } from "@material-ui/core/colors";
 
 
-library.add(faSpider, faCoins, faMagic, faEye, faShoePrints);
+library.add(faChevronRight);
 
-const spider = <FontAwesomeIcon className="text-gray-900" icon={faSpider} />;
-const coins = <FontAwesomeIcon className="text-gray-900" icon={faCoins} />;
-const magic = <FontAwesomeIcon className="opacity-50 text-gray-900" icon={faMagic} />;
-const eye = <FontAwesomeIcon className="opacity-50 text-gray-900" icon={faEye} />;
-const speed = <FontAwesomeIcon icon={faShoePrints} />
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />
 
 function getVal(id){
@@ -51,9 +41,8 @@ function Filters(props){
     const [loot, setLoot] = useState('Adventuring Gear')
     const [minError, setMinError] = useState(false)
     const [maxError, setMaxError] = useState(false)
-    const [challengeMin, setChallengeMin] = useState('')
     // Set to false so when getQuery first runs it will show the search panel in mobile - desktop doesn't utilize show/hide for search panel
-    const [controlsVisible, setControls] = useState(false)
+    const [controlsVisible, setControls] = useState(true)
 
     function range(start, end) {
       if (start == undefined || isNaN(start)){
@@ -68,7 +57,7 @@ function Filters(props){
 
 
 
-    async function getDetail(res){
+    async function getDetail(res, cardType){
 
       let randomNum = Math.floor(Math.random() * Object.keys(res).length + 1);
       if (panel == 'loot'){
@@ -85,15 +74,15 @@ function Filters(props){
         if (res.hasOwnProperty('equipment')){
           randomChoice = res.equipment[randomNum].url
         }
-        console.log(`randomChoice is ${randomChoice}`)
         randomURL = `https://www.dnd5eapi.co${randomChoice}`
-        console.log(randomURL)
       }
-      console.log(`randomURL is ${randomURL}`)
       await fetch(randomURL)
                 .then((res) => res.json())
                 .then((res) => {
                   console.log(res)
+                  if (cardType !== undefined){
+                    res.cardType = cardType
+                  }
                  setData(res)
                 if (panel == 'monsters'){
                   let subtype = res.subtype;
@@ -119,9 +108,10 @@ function Filters(props){
                 });
     }
 
-    async function getQuery(){
-      // console.log(panel)
-      setControls(false)
+    async function getQuery(cardType, onLoad){
+      // if (onLoad == true){
+      //   setControls(false)
+      // }
       await props.setActivePanel(panel)
 let url;
 if (panel == 'monsters'){
@@ -131,21 +121,18 @@ if (panel == 'monsters'){
   console.log (`loot is set to ${loot}`)
   let formattedLoot = loot.replace(/\s+/g, '-').toLowerCase().replace("'", "")
   url = `https://www.dnd5eapi.co/api/equipment-categories/${formattedLoot}`;
-  console.log(url)
 }
-      console.log(url)
         await fetch(url)
           .then((res) => res.json())
           .then(
             async (result) => {
               let res = result.results
-              console.log(result)
               if (panel == 'loot'){
                 res = result
               }
               // console.log(res)
               if (res){
-                getDetail(res)
+                getDetail(res, cardType)
               } else {
                 console.log(`error`)
                 console.log(result)
@@ -166,7 +153,7 @@ if (panel == 'monsters'){
 
 
     useEffect(()=>{
-        getQuery();
+        getQuery('monsters');
         makeLootItems();
     }, [])
 
@@ -198,13 +185,6 @@ if (panel == 'monsters'){
       }
 
 
-    }
-
-    function handleChallenge(type, string){
-      validateChallenges(type, string)
-      if (type == 'min'){
-        setChallengeMin(string)
-      }
     }
 
 
@@ -355,8 +335,6 @@ if (panel == 'monsters'){
     }
 
     function handlePanelChange(val){
-      console.log(val)
-      console.log(panel)
       if (panel == val){
         setControls(!controlsVisible)
       } else {
@@ -437,13 +415,14 @@ if (panel == 'monsters'){
                   </a>
                 </li>
               </ul>
+              {console.log(`controls ${controlsVisible}`)}
               <div
               style={determinePanelBG()}
-              className={`${controlsVisible == false && 'hidden '} md:flex w-full h-full flex rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative -mt-2`}>
+              className={`${controlsVisible ? 'flex ' : 'hidden '} md:flex w-full h-full rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative -mt-2`}>
                 {determinePanel()}
                 <button
                 disabled={disabled}
-                onClick={()=>getQuery()}
+                onClick={()=>getQuery(panel, true)}
                 className={`bg-gray-300 hover:bg-gray-200 text-green-800 font-bold py-2 px-4 rounded md:absolute bottom-0 right-0 my-3 md:m-8 flex flex-row items-center ${disabled && 'opacity-25'}`}>
  <p className="mr-3"> Fetch it</p> {chevronRight}
 </button>
