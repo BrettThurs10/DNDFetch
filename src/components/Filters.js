@@ -195,9 +195,9 @@ if (panel == 'monsters'){
        <Skull fill="black" className="h-6 w-6 mr-2" />
      <p className="title text-3xl text-left modesto-condensed uppercase">Monsters</p>
        </div>
-                <div className="my-3 w-full flex flex-row items-center">
+                <div className="my-3 w-full flex flex-row items-start">
                 <form
-                    className="flex justify-start flex-col md:py-2 w-1/2 md:w-full"
+                    className="flex justify-start flex-col w-1/2 md:w-full"
                     noValidate
                     autoComplete="off"
                   >
