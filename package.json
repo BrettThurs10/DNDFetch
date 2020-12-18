@@ -15,6 +15,7 @@
     "bootstrap": "^4.5.3",
     "loaders.css": "^0.1.2",
     "material-components-web": "^8.0.0",
+    "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
