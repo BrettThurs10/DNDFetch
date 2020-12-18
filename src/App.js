@@ -3,9 +3,10 @@ import "./App.css";
 import Filters from "./components/Filters";
 import Card from "./components/Card";
 import Feed from "./components/Feed";
-import { setRef } from "@material-ui/core";
 import Map from "./img/ForestPathPublic.jpg";
 import Logo from "./components/Logo";
+import {Helmet} from "react-helmet";
+
 
 const storage = localStorage.getItem("cardLibrary");
 
@@ -117,8 +118,14 @@ function App() {
         backgroundSize: "contain",
         backgroundRepeat: isMobileSize() ? true : false,
       }}
-      className="flex bg-contain md:h-screen md:overflow-hidden"
+      className="flex bg-contain md:h-screen md:overflow-hidden application"
     >
+<Helmet>
+                <meta charSet="utf-8" />
+                <title> >>DND-Fetch> </title>
+                <link rel="canonical" href="http://dndfetch.netlify.com" />
+                <meta name="description" content="A DND loot/mob generator to help your DM randomize campaign night." />
+            </Helmet>
       <div className="flex flex-col md:flex-row w-full">
         <div
           style={{
