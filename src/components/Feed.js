@@ -14,6 +14,7 @@ import { ReactComponent as Skull } from "../img/skull.svg";
 import { ReactComponent as Loot } from "../img/treasure.svg";
 import { ReactComponent as Spells } from "../img/witch-hat.svg";
 import { ReactComponent as Conditions } from "../img/brain.svg";
+import Tip from "../components/Tip";
 
 function Feed(props) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -210,11 +211,17 @@ function Feed(props) {
   return (
     <div
       style={{
-        borderLeft: "solid 1px rgba(0,0,0,0.8)",
+        borderLeft: "solid 3px rgba(0,0,0,0.8)",
         background: "rgba(0,0,0,0.4)",
       }}
       className={`flex flex-col  w-full overflow-y-scroll`}
     >
+    <div className="flex flex-row justify-between items-center py-2">
+    <p className="pl-2 text-white text-2xl petrona-bold">Card Library</p>
+      <Tip
+      num="3"
+      message="Whenever you click the blue 'Save card' button, it will be placed into the Card Library here. This library uses your browser's cache and saves on every action." />
+      </div>
       <div className="flex flex-row justify-between w-full">
         <button
           className={sortBtnClass("asc")}

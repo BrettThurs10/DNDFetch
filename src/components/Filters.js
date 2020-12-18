@@ -16,6 +16,7 @@ import {ReactComponent as Loot} from "../img/treasure.svg";
 import {ReactComponent as Spells} from "../img/witch-hat.svg";
 import {ReactComponent as Conditions} from "../img/brain.svg";
 import { red, purple, orange, blue, green } from "@material-ui/core/colors";
+import Tip from "../components/Tip";
 
 
 library.add(faChevronRight);
@@ -349,6 +350,14 @@ if (panel == 'monsters'){
       setPanel(val)
     }
 
+    function isMobileSize() {
+      if (window.screen.width <= 768) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     function determinePanelBG(){
       if(panel == 'monsters'){
         return {background: purple[300]}
@@ -368,6 +377,7 @@ if (panel == 'monsters'){
         className="flex w-full h-full md:h-screen">
 
             <div className="flex w-full flex-col">
+
               <ul className="flex border-b justify-center md:justify-start">
                 <li className={`${panel== 'monsters' && '-mb-px'} mr-1`}>
                   <a
@@ -415,10 +425,14 @@ if (panel == 'monsters'){
                   </a>
                 </li>
               </ul>
-              {console.log(`controls ${controlsVisible}`)}
               <div
               style={determinePanelBG()}
               className={`${controlsVisible ? 'flex ' : 'hidden '} md:flex w-full h-full rounded rounded-tl-none border-l border-r border-b p-10 flex-col justify-start items-start relative -mt-2`}>
+                            <Tip
+                            num='1'
+                            btnColor="text-black"
+                            className="absolute right-0 top-0 mt-2" message={`Search for monster, loot, spell and condition cards here. Just ${isMobileSize() ? 'tap' : 'click'} each category icon listed above. Click 'Fetch it' to find a random card from the category you fetched from.`} />
+
                 {determinePanel()}
                 <button
                 disabled={disabled}

@@ -8,8 +8,7 @@ import {
   faChevronRight,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
-import { withStyles } from "@material-ui/core/styles";
-import { green, purple } from "@material-ui/core/colors";
+import Tip from "../components/Tip";
 
 library.add(faChevronRight, faImages, faSave);
 const images = <FontAwesomeIcon className="text-lg" icon={faImages} />;

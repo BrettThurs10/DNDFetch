@@ -132,7 +132,7 @@ function App() {
       <div className="flex flex-col md:flex-row w-full">
         <div
           style={{
-            borderRight: "solid 1px rgba(0,0,0,0.8)",
+            borderRight: "solid 3px rgba(0,0,0,0.8)",
             background: "rgba(0,0,0,0.4)",
           }}
           className="flex w-full md:w-1/4 flex-col h-scren"
@@ -140,7 +140,7 @@ function App() {
           <div className="flex flex-col items-center md:items-start px-4 md:pl-2 pb-6 justify-center md:justify-start">
             <Logo />
             <p className="text-white text-sm text-center md:text-left">
-              A DND card generator for all your adventures. Powered by{" "}
+              A DND card generator for all your adventures. Powered by
               <a
                 className="text-red-400 hover:text-red-600"
                 href="https://www.dnd5eapi.co/"
