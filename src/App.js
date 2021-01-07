@@ -52,7 +52,7 @@ function App() {
 
   function removeCard(name) {
     let newLibrary = cardLibrary.filter((x) => x.name !== name);
-    localStorage.setItem("cardLibrary", JSON.stringify(cardLibrary));
+    localStorage.setItem("cardLibrary", JSON.stringify(newLibrary));
     setCardLibrary(newLibrary);
     setRefresh(!refresh);
   }
@@ -100,7 +100,7 @@ function App() {
 
   function handleClearLibrary() {
     setCardLibrary([]);
-    localStorage.setItem("cardLibrary", null);
+    window.localStorage.clear();
   }
 
   function isMobileSize() {
