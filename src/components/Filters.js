@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
+import { faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -10,14 +11,17 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as utils from "../assets/utils.js";
 import { ReactComponent as Skull } from "../img/skull.svg";
+import { ReactComponent as BMC } from "../img/bmc.svg";
 import { ReactComponent as Loot } from "../img/treasure.svg";
 import { ReactComponent as Spells } from "../img/witch-hat.svg";
 import { red, purple, orange, blue, green } from "@material-ui/core/colors";
 import Tip from "../components/Tip";
 
-library.add(faChevronRight);
+library.add(faChevronRight, faTwitter);
 
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />;
+const twitterIcon = <FontAwesomeIcon icon={faTwitter} />;
+const gitHub = <FontAwesomeIcon icon={faGithub} />;
 
 const spellSchools = [
   "Any",
@@ -362,8 +366,8 @@ function Filters(props) {
             Spells
           </p>
         </div>
-        <div class="flex flex-col w-full">
-        <FormControl className="flex w-1/2 md:w-full pr-1">
+        <div class="flex flex-row md:flex-col w-full">
+        <FormControl className="flex w-1/2 md:w-full mr-1">
         <InputLabel id="spell-label" htmlFor="school-categories"><p style={{transform: 'translate(14px, 10px)'}}>Schools</p></InputLabel>
           <Select
             variant="filled"
@@ -379,7 +383,8 @@ function Filters(props) {
             {spellSchoolCats}
           </Select>
         </FormControl>
-        <FormControl className="flex w-1/2 md:w-full pl-1">
+        <div class="px-1"></div>
+        <FormControl className="flex w-1/2 md:w-full ml-1">
         <InputLabel id="spell-level" htmlFor="spell-level"><p style={{transform: 'translate(14px, 10px)'}}>Spell level</p></InputLabel>
           <Select
             variant="filled"
@@ -515,10 +520,20 @@ function Filters(props) {
               <p className="mr-3 text-center sm:text-left w-full">Fetch it</p> {chevronRight}
             </button>
           </div>
-          <div class="flex w-100 bottom-0 mb-8" style={{flex: .3}}>
-            <p class="text-sm">
-              Made by <a class="text-red-900 hover:text-red-700 font-bold" href="https://brettthurston.com">Brett Thurston</a>
-            </p>
+          <div class=" flex flex-col w-full justify-center bottom-0 mt-2 mb-0 md:mb-8 items-center" style={{flex: .3}}>
+          <div class="flex flex-row w-full justify-center items-center opacity-75">
+          <a class="text-thin text-gray-900 hover:text-gray-800 font-normal text-sm" href="https://brettthurston.com">
+              Made by Brett Thurston
+          </a>
+             <a href="https://twitter.com/BrettThurs10" class="text-thin text-gray-800 hover:text-gray-700 cursor-pointer px-1">{twitterIcon}</a>
+             <a href="https://github.com/BrettThurs10/DNDFetch" class="text-thin text-gray-800 hover:text-gray-700 cursor-pointer px-1">{gitHub}</a>
+          </div>
+            <a href='https://www.buymeacoffee.com/brettthurston' target='_blank'>
+              <div class="flex flex-row bg-green-400 hover:bg-green-500 cursor-pointer p-3 rounded justify-center items-center mt-2">
+              <BMC className="h-4 w-4 mr-2" />
+                <p class='text-sm'>Buy me a coffee</p>
+                </div>
+            </a>
           </div>
         </div>
       </div>

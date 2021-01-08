@@ -6,21 +6,70 @@ import Feed from "./components/Feed";
 import Map from "./img/ForestPathPublic.jpg";
 import Logo from "./components/Logo";
 import { Helmet } from "react-helmet";
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+
 
 const storage = localStorage.getItem("cardLibrary");
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    border: '2px solid #000',
+    padding: 10,
+  },
+}));
+
 function App() {
+  const classes = useStyles();
   const [data, setData] = useState("");
   const [conditions, setConditions] = useState(null);
   const [cardLibrary, setCardLibrary] = useState(JSON.parse(storage) ?? []);
   const [refresh, setRefresh] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [activePanel, setActivePanel] = useState("monsters");
+  const [open, setOpen] = useState(false);
+  const [modalStyle] = useState(getModalStyle);
+
 
   useEffect(() => {
     document.title = '>>DND-Fetch>'
-    getConditions();
   }, []);
+
+  const modalBody = (
+    <div style={modalStyle} className={`${classes.paper} shadow w-1/3`}>
+      <div className="p-10 flex flex-col">
+      <h2 id="modal-title" class="text-md font-semibold">DND Fetch is made possible thanks in part to:</h2>
+
+        <a href="https://www.patreon.com/GoAdventureMaps" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">GoAdventureMaps</a>
+        <div class="text-blue-500 hover:text-teal-700 cursor-pointer" >Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+        <a href="https://reactjs.org/" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">ReactJS</a>
+        <a href="https://tailwindcss.com/" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">TailwindCSS</a>
+        <a href="https://tailwindcss.com/" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">FontAwesome</a>
+        <a href="https://tailwindcss.com/" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">Material UI</a>
+
+
+      </div>
+
+    </div>
+  );
 
   function handleSaveCard(cardObj) {
     let array = cardLibrary;
@@ -32,52 +81,20 @@ function App() {
     console.log(cardLibrary);
   }
 
-  async function getCondition(condition) {
-    if (condition !== null) {
-      let url = `https://www.dnd5eapi.co/api/conditions/${condition.toLowerCase()}`;
-      await fetch(url)
-        .then((res) => res.json())
-        .then(async (result) => {
-          // setIsLoaded(true);
-          let desc = result.desc.join(" ").replace(/- /g, "");
-          let name = result.name;
-          let conditionsObject = {
-            name,
-            desc,
-          };
-          return conditionsObject;
-        });
-    }
-  }
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   function removeCard(name) {
     let newLibrary = cardLibrary.filter((x) => x.name !== name);
     localStorage.setItem("cardLibrary", JSON.stringify(newLibrary));
     setCardLibrary(newLibrary);
     setRefresh(!refresh);
-  }
-
-  async function getConditions() {
-    let url = `https://www.dnd5eapi.co/api/conditions`;
-    await fetch(url)
-      .then((res) => res.json())
-      .then(async (result) => {
-        // setIsLoaded(true);
-        if (result) {
-          let res = result.results;
-          if (res !== undefined) {
-            console.log(res);
-            console.log("conditions results");
-            let conditionsArr = [];
-            res.forEach(async function (x) {
-              await conditionsArr.push(x.name);
-            });
-
-            setConditions(conditionsArr);
-            // console.log(getCondition(conditions[0]))
-          }
-        }
-      });
   }
 
   function loadCard(name) {
@@ -92,6 +109,8 @@ function App() {
       }
     });
   }
+
+
 
   function handlePanelChange(val) {
     setActivePanel(val);
@@ -148,7 +167,18 @@ function App() {
               >
                  DND 5e API
               </a>
+              <p class="inline text-sm text-white pl-1">•</p>
+              <button type="button" class="inline text-sm text-white pl-1" onClick={handleOpen}>Credits</button>
+              <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+     {modalBody}
+      </Modal>
             </p>
+
           </div>
           <Filters
             refresh={refresh}

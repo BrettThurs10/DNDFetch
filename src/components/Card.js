@@ -4,14 +4,11 @@ import Button from "@material-ui/core/Button";
 import Save from "@material-ui/icons/Save";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
-  faImages,
   faChevronRight,
   faSave,
 } from "@fortawesome/free-solid-svg-icons";
-import Tip from "../components/Tip";
 
-library.add(faChevronRight, faImages, faSave);
-const images = <FontAwesomeIcon className="text-lg" icon={faImages} />;
+library.add(faChevronRight, faSave);
 
 function Card(props) {
   const [data, setData] = useState(props.data);
@@ -418,7 +415,7 @@ console.log(data)
   return (
     <div
       id="card"
-      className="flex w-full py-2 px-6 md:px-24 items-center justify-center relative flex-col"
+      className="flex w-full p-6 md:px-24 items-center justify-center relative flex-col"
     >
       {returnCardControls()}
       <div
