@@ -120,8 +120,8 @@ function Card(props) {
     console.log();
 
     let block = (
-      <div className="flex px-4 items-start">
-        <p className="petrona-bold text-bold pr-2 font-bold text-sm inline">
+      <div class="px-4">
+        <p className="petrona-bold text-bold font-bold text-sm inline">
           {type}
         </p>
         <p className="text-sm font-thin inline">{string}</p>
@@ -140,10 +140,10 @@ function Card(props) {
       });
     }
     let block = (
-      <div className="flex px-4 items-start">
+      <div className="px-4">
         <p className="petrona-bold text-bold font-bold text-sm inline">
-          Proficiencies:{" "}
-          <p className="text-sm font-thin inline pl-2">{newArray.join(", ")}</p>
+          Proficiencies:
+          <p className="text-sm font-thin inline pl-1">{newArray.join(", ")}</p>
         </p>
       </div>
     );

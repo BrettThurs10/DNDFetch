@@ -516,8 +516,8 @@ function Filters(props) {
             </button>
           </div>
           <div class="flex w-100 bottom-0 mb-8" style={{flex: .3}}>
-            <p class="text-sm text-gray-800">
-              Made by <a href="https://brettthurston.com">Brett Thurston</a>
+            <p class="text-sm">
+              Made by <a class="text-red-900 hover:text-red-700 font-bold" href="https://brettthurston.com">Brett Thurston</a>
             </p>
           </div>
         </div>

@@ -142,11 +142,11 @@ function App() {
             <p className="text-white text-sm text-center md:text-left">
               A DND card generator for all your adventures. Powered by
               <a
-                className="text-red-400 hover:text-red-600"
+                className="text-red-400 hover:text-red-600 pl-1"
                 href="https://www.dnd5eapi.co/"
                 target="_blank"
               >
-                DND 5e API
+                 DND 5e API
               </a>
             </p>
           </div>

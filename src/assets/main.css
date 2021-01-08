@@ -19210,7 +19210,7 @@ html, body{
   background-color: rgb(18, 19, 19);
 }
 
-.MuiFormLabel-root .MuiInputLabel-root .MuiInputLabel-formControl .MuiInputLabel-animated .MuiInputLabel-shrink .MuiFormLabel-filled{
+.labelTransform{
   transform: translate(12px, 10px) scale(0.75);
 }
 
