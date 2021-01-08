@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "./static/css/main.df801d41.chunk.css",
-    "main.js": "./static/js/main.c63f0382.chunk.js",
-    "main.js.map": "./static/js/main.c63f0382.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.0b362f11.js",
-    "runtime-main.js.map": "./static/js/runtime-main.0b362f11.js.map",
-    "static/js/2.d7feb6da.chunk.js": "./static/js/2.d7feb6da.chunk.js",
-    "static/js/2.d7feb6da.chunk.js.map": "./static/js/2.d7feb6da.chunk.js.map",
-    "static/js/3.82c565a9.chunk.js": "./static/js/3.82c565a9.chunk.js",
-    "static/js/3.82c565a9.chunk.js.map": "./static/js/3.82c565a9.chunk.js.map",
+    "main.css": "./static/css/main.a64da1b4.chunk.css",
+    "main.js": "./static/js/main.6d71d1b1.chunk.js",
+    "main.js.map": "./static/js/main.6d71d1b1.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.65f4a837.js",
+    "runtime-main.js.map": "./static/js/runtime-main.65f4a837.js.map",
+    "static/js/2.375a8124.chunk.js": "./static/js/2.375a8124.chunk.js",
+    "static/js/2.375a8124.chunk.js.map": "./static/js/2.375a8124.chunk.js.map",
+    "static/js/3.96e2af98.chunk.js": "./static/js/3.96e2af98.chunk.js",
+    "static/js/3.96e2af98.chunk.js.map": "./static/js/3.96e2af98.chunk.js.map",
     "index.html": "./index.html",
-    "static/css/main.df801d41.chunk.css.map": "./static/css/main.df801d41.chunk.css.map",
-    "static/js/2.d7feb6da.chunk.js.LICENSE.txt": "./static/js/2.d7feb6da.chunk.js.LICENSE.txt",
+    "static/css/main.a64da1b4.chunk.css.map": "./static/css/main.a64da1b4.chunk.css.map",
+    "static/js/2.375a8124.chunk.js.LICENSE.txt": "./static/js/2.375a8124.chunk.js.LICENSE.txt",
     "static/media/ForestPathPublic.308c3a8f.jpg": "./static/media/ForestPathPublic.308c3a8f.jpg",
-    "static/media/brain.fe7a4b2d.svg": "./static/media/brain.fe7a4b2d.svg",
+    "static/media/bmc.db75c152.svg": "./static/media/bmc.db75c152.svg",
     "static/media/skull.bf096c5c.svg": "./static/media/skull.bf096c5c.svg",
     "static/media/treasure.234edf00.svg": "./static/media/treasure.234edf00.svg",
     "static/media/witch-hat.3fb22da8.svg": "./static/media/witch-hat.3fb22da8.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.0b362f11.js",
-    "static/js/2.d7feb6da.chunk.js",
-    "static/css/main.df801d41.chunk.css",
-    "static/js/main.c63f0382.chunk.js"
+    "static/js/runtime-main.65f4a837.js",
+    "static/js/2.375a8124.chunk.js",
+    "static/css/main.a64da1b4.chunk.css",
+    "static/js/main.6d71d1b1.chunk.js"
   ]
 }
