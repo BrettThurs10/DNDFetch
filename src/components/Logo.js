@@ -4,7 +4,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 function Logo(){
 return(
-<div className="flex flex-row items-center">
+<div className="flex flex-row items-center w-full text-center">
 <DoubleArrowIcon className="text-white" style={{fontSize: 15}}/>
 <p className="text-white text-4xl modesto-condensed uppercase">DND</p>
 <p className="text-white text-3xl pb-1">-</p>

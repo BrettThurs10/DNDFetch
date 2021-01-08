@@ -68,3 +68,11 @@ export const monsterArray = [
       'Human',
       'Tiefling'
   ]
+
+  export const isMobileSize = () => {
+    if (window.screen.width <= 768) {
+      return true;
+    } else {
+      return false;
+    }
+  };

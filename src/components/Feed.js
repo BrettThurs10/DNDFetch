@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from "react";
-
 import {
-  createMuiTheme,
   withStyles,
-  makeStyles,
-  ThemeProvider,
 } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import CloseIcon from "@material-ui/icons/Close";
-import { red, purple, orange } from "@material-ui/core/colors";
-import { ListItem } from "@material-ui/core";
+import { red, purple, orange, blue } from "@material-ui/core/colors";
 import { ReactComponent as Skull } from "../img/skull.svg";
 import { ReactComponent as Loot } from "../img/treasure.svg";
 import { ReactComponent as Spells } from "../img/witch-hat.svg";
-import { ReactComponent as Conditions } from "../img/brain.svg";
+import RemoveItemBtn from "../components/RemoveItemBtn";
 import Tip from "../components/Tip";
+import FeedSortBtns from "../components/FeedSortBtns";
 
 function Feed(props) {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState(props.cardLibrary);
   const [refresh, setRefresh] = useState(props.refresh);
   const [sortBtn, setSortBtn] = useState("asc");
@@ -111,6 +105,21 @@ function Feed(props) {
     },
   }))(Button);
 
+  const BlueButton = withStyles((theme) => ({
+    root: {
+      textAlign: "left",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+      boxShadow: "0 0 0 0 black",
+      borderRadius: 0,
+      color: theme.palette.getContrastText(blue[300]),
+      backgroundColor: blue[300],
+      "&:hover": {
+        backgroundColor: blue[200],
+      },
+    },
+  }))(Button);
+
   const RedButton = withStyles((theme) => ({
     root: {
       borderRadius: 0,
@@ -163,12 +172,14 @@ function Feed(props) {
           onClick={() => props.loadCard(name)}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center w-5/6 pr-1">
             <Skull className="w-4 h-4 mr-2" fill="black" />
-            <p className="modesto-condensed text-2xl uppercase text-black">
+            <p className="modesto-condensed text-2xl uppercase text-black truncate">
               {name}
             </p>
           </div>
+          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
+
         </PurpleButton>
       );
     } else if (type == "loot") {
@@ -179,25 +190,39 @@ function Feed(props) {
           onClick={() => props.loadCard(name)}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
-          <div className="flex flex-row items-center">
-            <Loot className="w-4 h-4 mr-2" fill="black" />
-            <p className="modesto-condensed text-2xl uppercase text-black">
+          <div className="flex flex-row items-center w-5/6 pr-1">
+            <Loot className="w-4 h-4 mr-2 " fill="black" />
+            <p className="modesto-condensed text-2xl uppercase text-black truncate">
               {name}
             </p>
           </div>
+          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
         </OrangeButton>
+      );
+    } else if (type == "spells") {
+      listItem = (
+        <BlueButton
+          variant="contained"
+          color="primary"
+          onClick={() => props.loadCard(name)}
+          className="w-full p-4 relative z-0 cursor-pointer"
+        >
+          <div className="flex flex-row items-center w-5/6 pr-1">
+            <Spells className="w-4 h-4 mr-2" fill="black" />
+            <p className="modesto-condensed text-2xl uppercase text-black truncate ">
+              {name}
+            </p>
+          </div>
+          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
+
+        </BlueButton>
       );
     }
 
     return (
-      <div className="flex flex-row justify-between items-center border-b border-gray-500">
+      <div className="flex flex-row items-center border-b border-gray-500">
         {listItem}
-        <RedButton
-          onClick={() => removeCardFromLibrary(name)}
-          className="text-white hover:text-gray-300 cursor-pointer relative z-10 px-5 h-full items-center flex h-full"
-        >
-          <CloseIcon />
-        </RedButton>
+
       </div>
     );
   }
@@ -214,7 +239,7 @@ function Feed(props) {
         borderLeft: "solid 3px rgba(0,0,0,0.8)",
         background: "rgba(0,0,0,0.4)",
       }}
-      className={`flex flex-col  w-full overflow-y-scroll`}
+      className={`flex flex-col  w-full`}
     >
     <div className="flex flex-row justify-between items-center py-2">
     <p className="pl-2 text-white text-2xl petrona-bold">Card Library</p>
@@ -222,35 +247,17 @@ function Feed(props) {
       num="3"
       message="Whenever you click the blue 'Save card' button, it will be placed into the Card Library here. This library uses your browser's cache and saves on every action." />
       </div>
-      <div className="flex flex-row justify-between w-full">
-        <button
-          className={sortBtnClass("asc")}
-          onClick={() => sortLibrary("asc")}
-        >
-          Asc
-        </button>
-        <button
-          className={sortBtnClass("dsc")}
-          onClick={() => sortLibrary("dsc")}
-        >
-          Dsc
-        </button>
-        <button
-          className={sortBtnClass("type")}
-          onClick={() => sortLibrary("type")}
-        >
-          Type
-        </button>
-        <button
-          className={sortBtnClass("clear")}
-          onClick={() => clearLibrary()}
-        >
-          Clear
-        </button>
-      </div>
+      {/* Feed sort btns */}
+      <FeedSortBtns
+      sortBtnClass={(val)=>sortBtnClass(val)}
+      sortLibrary={(val)=>sortLibrary(val)} />
+      {/* Actual feed */}
+      <div className="overflow-y-scroll">
       {props.cardLibrary.length !== 0
         ? loadFeed(props.cardLibrary)
         : returnEmpty()}
+      </div>
+
     </div>
   );
 }

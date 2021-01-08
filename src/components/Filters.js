@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import TextField from "@material-ui/core/TextField";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import * as utils from "../assets/utils.js";
+import SpellsPanel from "../components/SpellsPanel";
+import MonsterPanel from "../components/MonsterPanel";
+import LootPanel from "../components/LootPanel";
 import { ReactComponent as Skull } from "../img/skull.svg";
-import { ReactComponent as BMC } from "../img/bmc.svg";
 import { ReactComponent as Loot } from "../img/treasure.svg";
 import { ReactComponent as Spells } from "../img/witch-hat.svg";
 import { red, purple, orange, blue, green } from "@material-ui/core/colors";
 import Tip from "../components/Tip";
 
-library.add(faChevronRight, faTwitter);
+library.add(faChevronRight);
 
 const chevronRight = <FontAwesomeIcon icon={faChevronRight} />;
-const twitterIcon = <FontAwesomeIcon icon={faTwitter} />;
-const gitHub = <FontAwesomeIcon icon={faGithub} />;
 
 const spellSchools = [
   "Any",
@@ -37,13 +33,6 @@ const spellSchools = [
 
 const spellLevels = ["Any", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-function getVal(id) {
-  let val = document.getElementById(id)?.value;
-  if (id == "") {
-    val = "0";
-  }
-  return parseInt(val);
-}
 
 function Filters(props) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -57,8 +46,6 @@ function Filters(props) {
   const [spellLevelCat, setSpellLevelCats] = useState("Any");
   const [spellLevelChoice, setSpellLevelChoice] = useState("Any");
   const [loot, setLoot] = useState("Adventuring Gear");
-  const [minError, setMinError] = useState(false);
-  const [maxError, setMaxError] = useState(false);
   const [firstTime, setFirstTime] = useState(true)
   // Set to false so when getQuery first runs it will show the search panel in mobile - desktop doesn't utilize show/hide for search panel
   const [controlsVisible, setControls] = useState(true);
@@ -74,6 +61,14 @@ function Filters(props) {
     return Array(end - start + 1)
       .fill()
       .map((_, idx) => start + idx);
+  }
+
+  function getVal(id) {
+    let val = document.getElementById(id)?.value;
+    if (id == "") {
+      val = "0";
+    }
+    return parseInt(val);
   }
 
   async function getDetail(res, cardType) {
@@ -130,7 +125,7 @@ function Filters(props) {
   }
 
   async function getQuery(cardType) {
-    if (isMobileSize && !firstTime){
+    if (utils.isMobileSize && !firstTime){
       setControls(false)
     }
     setFirstTime(false)
@@ -196,85 +191,7 @@ function Filters(props) {
     makeSpellLevels();
   }, []);
 
-  function validateChallenges(type, number) {
-    let minValue = getVal("challengeMin");
-    let maxValue = getVal("challengeMax");
-    if (isNaN(minValue)) {
-      minValue = 0;
-    }
-    if (isNaN(maxValue)) {
-      maxValue = 30;
-    }
 
-    if (type == "min" && parseInt(number) >= maxValue) {
-      setMinError(true);
-      setDisabled(true);
-    } else {
-      setMinError(false);
-      setDisabled(false);
-    }
-
-    if (type == "max" && parseInt(number) <= minValue) {
-      setMaxError(true);
-      setDisabled(true);
-    } else {
-      setMaxError(false);
-      setDisabled(false);
-    }
-  }
-
-  function monsterPanel() {
-    return (
-      <>
-        <div className="flex flex-row items-center">
-          <Skull fill="black" className="h-6 w-6 mr-2" />
-          <p className="title text-3xl text-left modesto-condensed uppercase">
-            Monsters
-          </p>
-        </div>
-        <div className="my-3 w-full flex flex-row items-start">
-          <form
-            className="flex justify-start flex-col w-1/2 md:w-full pr-1"
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-
-              helperText={
-                minError &&
-                "Number cannot exceed or be the challenge max number."
-              }
-              error={minError}
-              id="challengeMin"
-              placeholder="0"
-              label="Challenge min"
-              variant="filled"
-              defaultValue="0"
-              onChange={(e) => validateChallenges("min", e.target.value)}
-            />
-          </form>
-          <form
-            className="flex justify-start flex-col w-1/2 md:w-full pl-1"
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              helperText={
-                maxError && "Number cannot be below the challenge min number."
-              }
-              error={maxError}
-              placeholder="30"
-              id="challengeMax"
-              label="Challenge max"
-              variant="filled"
-              defaultValue="30"
-              onChange={(e) => validateChallenges("max", e.target.value)}
-            />
-          </form>
-        </div>
-      </>
-    );
-  }
 
   async function makeLootItems() {
     let url = `https://www.dnd5eapi.co/api/equipment-categories/`;
@@ -332,91 +249,22 @@ function Filters(props) {
     setSpellLevelCats(spellLevelArr);
   }
 
-  function lootPanel() {
-    return (
-      <>
-        <div className="flex flex-row items-center w-full">
-          <Loot fill="black" className="h-6 w-6 mr-2" />
-          <p className="title text-3xl text-left modesto-condensed uppercase">
-            Loot
-          </p>
-        </div>
-        <FormControl className="flex w-full">
-          <InputLabel id="loot-label" htmlFor="loot-categories"><p style={{transform: 'translate(14px, 10px)'}}>Loot categories</p></InputLabel>
-          <Select
-                        variant="filled"
-            className="flex w-full"
-            inputProps={{
-              name: 'loot categories',
-              id: 'loot-categories',
-            }}
-            value={loot}
-          >
-            {lootCats}
-          </Select>
-        </FormControl>
-      </>
-    );
-  }
-
-  function spellsPanel() {
-    return (
-      <>
-        <div className="flex flex-row items-center w-full">
-          <Spells fill="black" className="h-6 w-6 mr-2" />
-          <p className="title text-3xl text-left modesto-condensed uppercase">
-            Spells
-          </p>
-        </div>
-        <div class="flex flex-row md:flex-col w-full">
-        <FormControl className="flex w-1/2 md:w-full mr-1">
-        <InputLabel id="spell-label" htmlFor="school-categories"><p style={{transform: 'translate(14px, 10px)'}}>Schools</p></InputLabel>
-          <Select
-            variant="filled"
-            className="flex w-full"
-            labelId="spells"
-            id="spells"
-            inputProps={{
-              name: 'school categories',
-              id: 'school-categories',
-            }}
-            value={spellSchoolChoice}
-          >
-            {spellSchoolCats}
-          </Select>
-        </FormControl>
-        <div class="px-1"></div>
-        <FormControl className="flex w-1/2 md:w-full ml-1">
-        <InputLabel id="spell-level" htmlFor="spell-level"><p style={{transform: 'translate(14px, 10px)'}}>Spell level</p></InputLabel>
-          <Select
-            variant="filled"
-            className="flex w-full"
-            labelId="spells"
-            id="spells"
-            inputProps={{
-              name: 'spell level',
-              id: 'spell-level',
-            }}
-            value={spellLevelChoice}
-          >
-            {spellLevelCat}
-          </Select>
-        </FormControl>
-        </div>
-
-
-
-      </>
-    );
-  }
-
   function determinePanel() {
     if (panel == "monsters") {
-      return monsterPanel();
+      return <MonsterPanel />;
     } else if (panel == "loot") {
-      return lootPanel();
+      return <LootPanel loot={loot} lootCats={lootCats} />;
     } else if (panel == "spells") {
-      return spellsPanel();
+      return(
+        <SpellsPanel
+        data={data}
+        spellSchoolCats={spellSchoolCats}
+        spellSchoolChoice={spellSchoolChoice}
+        spellLevelCat={spellLevelCat}
+        spellLevelChoice={spellLevelChoice}
+        />
+      )
+
     }
   }
 
@@ -435,13 +283,6 @@ function Filters(props) {
     setPanel(val);
   }
 
-  function isMobileSize() {
-    if (window.screen.width <= 768) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   function determinePanelBG() {
     if (panel == "monsters") {
@@ -507,7 +348,7 @@ function Filters(props) {
               btnColor="text-black"
               className="absolute right-0 top-0 mt-2"
               message={`Search for monster, loot, spell and condition cards here. Just ${
-                isMobileSize() ? "tap" : "click"
+                utils.isMobileSize ? "tap" : "click"
               } each category icon listed above. Click 'Fetch it' to find a random card from the category you fetched from.`}
             />
 
@@ -522,21 +363,7 @@ function Filters(props) {
               <p className="mr-3 text-center sm:text-left w-full">Fetch it</p> {chevronRight}
             </button>
           </div>
-          <div class=" flex flex-col w-full justify-center bottom-0 mt-2 mb-0 md:mb-8 items-center" style={{flex: .3}}>
-          <div class="flex flex-row w-full justify-center items-center opacity-75">
-          <a class="text-thin text-gray-900 hover:text-gray-800 font-normal text-sm" href="https://brettthurston.com">
-              Made by Brett Thurston
-          </a>
-             <a href="https://twitter.com/BrettThurs10" class="text-thin text-gray-800 hover:text-gray-700 cursor-pointer px-1">{twitterIcon}</a>
-             <a href="https://github.com/BrettThurs10/DNDFetch" class="text-thin text-gray-800 hover:text-gray-700 cursor-pointer px-1">{gitHub}</a>
-          </div>
-            <a href='https://www.buymeacoffee.com/brettthurston' target='_blank'>
-              <div class="flex flex-row bg-green-400 hover:bg-green-500 cursor-pointer p-3 rounded justify-center items-center mt-2">
-              <BMC className="h-4 w-4 mr-2" />
-                <p class='text-sm'>Buy me a coffee</p>
-                </div>
-            </a>
-          </div>
+
         </div>
       </div>
     </div>
