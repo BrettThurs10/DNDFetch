@@ -59,6 +59,7 @@ function Filters(props) {
   const [loot, setLoot] = useState("Adventuring Gear");
   const [minError, setMinError] = useState(false);
   const [maxError, setMaxError] = useState(false);
+  const [firstTime, setFirstTime] = useState(true)
   // Set to false so when getQuery first runs it will show the search panel in mobile - desktop doesn't utilize show/hide for search panel
   const [controlsVisible, setControls] = useState(true);
 
@@ -128,10 +129,11 @@ function Filters(props) {
       });
   }
 
-  async function getQuery(cardType, onLoad) {
-    // if (onLoad == true){
-    //   setControls(false)
-    // }
+  async function getQuery(cardType) {
+    if (isMobileSize && !firstTime){
+      setControls(false)
+    }
+    setFirstTime(false)
     await props.setActivePanel(panel);
     let url;
     if (panel == "monsters") {

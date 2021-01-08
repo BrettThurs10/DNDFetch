@@ -12,6 +12,14 @@ import Modal from '@material-ui/core/Modal';
 
 const storage = localStorage.getItem("cardLibrary");
 
+const isMobileSize = () => {
+  if (window.screen.width <= 768) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function rand() {
   return Math.round(Math.random() * 20) - 10;
 }
@@ -23,7 +31,7 @@ function getModalStyle() {
   return {
     top: `50%`,
     left: `50%`,
-    transform: `translate(-${top}%, -${left}%)`,
+    transform: isMobileSize ? `translate(-50%, -50%)` : `translate(-${top}%, -${left}%)`,
   };
 }
 
@@ -54,9 +62,12 @@ function App() {
   }, []);
 
   const modalBody = (
-    <div style={modalStyle} className={`${classes.paper} shadow w-1/3`}>
+    <div style={modalStyle} className={`${classes.paper} shadow w-full md:w-1/3`}>
       <div className="p-10 flex flex-col">
       <h2 id="modal-title" class="text-md font-semibold">DND Fetch is made possible thanks in part to:</h2>
+
+      <a href="https://www.dnd5eapi.co/" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">DND 5e API</a>
+      <a href="https://dnd.wizards.com/articles/features/systems-reference-document-srd" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">DND Systems Refrence Document</a>
 
         <a href="https://www.patreon.com/GoAdventureMaps" target='_blank' class="text-blue-500 hover:text-teal-700 cursor-pointer">GoAdventureMaps</a>
         <div class="text-blue-500 hover:text-teal-700 cursor-pointer" >Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
@@ -122,20 +133,14 @@ function App() {
     window.localStorage.clear();
   }
 
-  function isMobileSize() {
-    if (window.screen.width <= 768) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
 
   return (
     <div
       style={{
         background: `linear-gradient(0deg, rgba(255, 0, 255, 0.3), rgba(255, 0, 150, 0.3)), url(${Map})`,
         backgroundSize: "contain",
-        backgroundRepeat: isMobileSize() ? true : false,
+        backgroundRepeat: isMobileSize ? true : false,
       }}
       className="flex bg-contain md:h-screen md:overflow-hidden application"
     >
@@ -156,8 +161,11 @@ function App() {
           }}
           className="flex w-full md:w-1/4 flex-col h-scren"
         >
-          <div className="flex flex-col items-center md:items-start px-4 md:pl-2 pb-6 justify-center md:justify-start">
+          <div className="flex flex-col items-center md:items-start p-4 md:px-4 md:pl-2 pb-6 justify-center md:justify-start">
+            <div class="transform scale-150 md:scale-100">
             <Logo />
+              </div>
+
             <p className="text-white text-sm text-center md:text-left">
               A DND card generator for all your adventures. Powered by
               <a
