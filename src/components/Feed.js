@@ -169,7 +169,9 @@ function Feed(props) {
         <PurpleButton
           variant="contained"
           color="primary"
-          onClick={() => props.loadCard(name)}
+          onClick={(event) => {
+            event.stopPropagation();
+            props.loadCard(name)}}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
@@ -187,7 +189,9 @@ function Feed(props) {
         <OrangeButton
           variant="contained"
           color="primary"
-          onClick={() => props.loadCard(name)}
+          onClick={(event) => {
+            event.stopPropagation();
+            props.loadCard(name)}}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
@@ -204,7 +208,9 @@ function Feed(props) {
         <BlueButton
           variant="contained"
           color="primary"
-          onClick={() => props.loadCard(name)}
+          onClick={(event) => {
+            event.stopPropagation();
+            props.loadCard(name)}}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
