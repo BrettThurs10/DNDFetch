@@ -169,13 +169,13 @@ function Feed(props) {
     let listItem;
     if (type == "monsters") {
       listItem = (
-        <>
+        <div class="w-full relative flex flex-row">
         <PurpleButton
           variant="contained"
           color="primary"
           name="Monster Item"
           onClick={() => props.loadCard(name)}
-          className="w-full p-4 relative z-0 cursor-pointer"
+          className="w-full p-4 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
             <Skull className="w-4 h-4 mr-2" fill="black" />
@@ -186,16 +186,16 @@ function Feed(props) {
 
         </PurpleButton>
         <RemoveItemBtn removeAction={() => props.removeCard(name)} />
-        </>
+        </div>
       );
     } else if (type == "loot") {
       listItem = (
-        <>
+        <div class="w-full relative flex flex-row">
         <OrangeButton
           variant="contained"
           color="primary"
           onClick={() => props.loadCard(name)}
-          className="w-full p-4 relative z-0 cursor-pointer"
+          className="w-full p-4 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
             <Loot className="w-4 h-4 mr-2 " fill="black" />
@@ -205,16 +205,16 @@ function Feed(props) {
           </div>
         </OrangeButton>
          <RemoveItemBtn removeAction={() => props.removeCard(name)} />
-         </>
+         </div>
       );
     } else if (type == "spells") {
       listItem = (
-        <>
+        <div class="w-full relative flex flex-row">
         <BlueButton
           variant="contained"
           color="primary"
           onClick={() => props.loadCard(name)}
-          className="w-full p-4 relative z-0 cursor-pointer"
+          className="w-full p-4 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
             <Spells className="w-4 h-4 mr-2" fill="black" />
@@ -224,7 +224,7 @@ function Feed(props) {
           </div>
         </BlueButton>
          <RemoveItemBtn removeAction={() => props.removeCard(name)} />
-         </>
+         </div>
       );
     }
 
