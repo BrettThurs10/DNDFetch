@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  withStyles,
-} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { red, purple, orange, blue } from "@material-ui/core/colors";
 import { ReactComponent as Skull } from "../img/skull.svg";
@@ -157,6 +155,11 @@ function Feed(props) {
     );
   }
 
+  const loadCard = (name) =>{
+
+    props.loadCard(name)
+  }
+
   function clearLibrary() {
     props.clearLibrary();
     setSortBtn(null);
@@ -166,12 +169,12 @@ function Feed(props) {
     let listItem;
     if (type == "monsters") {
       listItem = (
+        <>
         <PurpleButton
           variant="contained"
           color="primary"
-          onClick={(event) => {
-            event.stopPropagation();
-            props.loadCard(name)}}
+          name="Monster Item"
+          onClick={() => props.loadCard(name)}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
@@ -180,18 +183,18 @@ function Feed(props) {
               {name}
             </p>
           </div>
-          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
 
         </PurpleButton>
+        <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+        </>
       );
     } else if (type == "loot") {
       listItem = (
+        <>
         <OrangeButton
           variant="contained"
           color="primary"
-          onClick={(event) => {
-            event.stopPropagation();
-            props.loadCard(name)}}
+          onClick={() => props.loadCard(name)}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
@@ -200,17 +203,17 @@ function Feed(props) {
               {name}
             </p>
           </div>
-          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
         </OrangeButton>
+         <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+         </>
       );
     } else if (type == "spells") {
       listItem = (
+        <>
         <BlueButton
           variant="contained"
           color="primary"
-          onClick={(event) => {
-            event.stopPropagation();
-            props.loadCard(name)}}
+          onClick={() => props.loadCard(name)}
           className="w-full p-4 relative z-0 cursor-pointer"
         >
           <div className="flex flex-row items-center w-5/6 pr-1">
@@ -219,16 +222,15 @@ function Feed(props) {
               {name}
             </p>
           </div>
-          <RemoveItemBtn removeAction={()=>props.removeCard(name)} />
-
         </BlueButton>
+         <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+         </>
       );
     }
 
     return (
       <div className="flex flex-row items-center border-b border-gray-500">
         {listItem}
-
       </div>
     );
   }
@@ -247,23 +249,25 @@ function Feed(props) {
       }}
       className={`flex flex-col  w-full`}
     >
-    <div className="flex flex-row justify-between items-center py-2">
-    <p className="pl-2 text-white text-2xl petrona-bold">Card Library</p>
-      <Tip
-      num="3"
-      message="Whenever you click the blue 'Save card' button, it will be placed into the Card Library here. This library uses your browser's cache and saves on every action." />
+      <div className="flex flex-row justify-between items-center py-2">
+        <p className="pl-2 text-white text-2xl petrona-bold">Card Library</p>
+        <Tip
+          num="3"
+          message="Whenever you click the blue 'Save card' button, it will be placed into the Card Library here. This library uses your browser's cache and saves on every action."
+        />
       </div>
       {/* Feed sort btns */}
       <FeedSortBtns
-      sortBtnClass={(val)=>sortBtnClass(val)}
-      sortLibrary={(val)=>sortLibrary(val)} />
+        clearLibrary={() => clearLibrary()}
+        sortBtnClass={(val) => sortBtnClass(val)}
+        sortLibrary={(val) => sortLibrary(val)}
+      />
       {/* Actual feed */}
       <div className="overflow-y-scroll">
-      {props.cardLibrary.length !== 0
-        ? loadFeed(props.cardLibrary)
-        : returnEmpty()}
+        {props.cardLibrary.length !== 0
+          ? loadFeed(props.cardLibrary)
+          : returnEmpty()}
       </div>
-
     </div>
   );
 }
