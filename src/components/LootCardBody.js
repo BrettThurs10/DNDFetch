@@ -1,4 +1,5 @@
 import React from 'react'
+import { MarkdownDescription } from './MarkdownDescription';
 
 function LootCardBody(props) {
     const data = props.data
@@ -16,12 +17,8 @@ function LootCardBody(props) {
         return contentsArr;
       }
 
-      function renderDesc(data) {
-        const descArr = [];
-        data.map((x, y) => {
-          descArr.push(<p>{x}</p>);
-        });
-        return descArr;
+      function renderDesc(desc) {
+        return <MarkdownDescription desc={desc}/>;
       }
 
       function renderProperties(data) {
