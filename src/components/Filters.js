@@ -132,11 +132,14 @@ function Filters(props) {
     await props.setActivePanel(panel);
     let url;
     if (panel == "monsters") {
-      const challenge = range(
-        getVal("challengeMin") ?? 0,
-        getVal("challengeMax") ?? 30
-      );
-      url = `https://www.dnd5eapi.co/api/monsters/?challenge_rating=${challenge}`;
+      const min = getVal("challengeMin") ?? 0;
+      const max = getVal("challengeMax") ?? 30;
+
+      const crs = []
+      for (let i = min; i < max; i++) {
+        crs.push("challenge_rating="+i);
+      }
+      url = `https://www.dnd5eapi.co/api/monsters/?${crs.join("&")}`;
     } else if (panel == "loot") {
       console.log(`loot is set to ${loot}`);
       let formattedLoot = loot
