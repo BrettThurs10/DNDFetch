@@ -58,15 +58,12 @@ function Feed(props) {
     setSortBtn(sortType);
     if (props.cardLibrary !== null) {
       if (sortType == "asc") {
-        console.log(ascSort(props.cardLibrary));
         setData(ascSort(props.cardLibrary));
         setRefresh(!props.refresh);
       } else if (sortType == "dsc") {
-        console.log(dscSort(props.cardLibrary));
         setData(dscSort(props.cardLibrary));
         setRefresh(!props.refresh);
       } else if (sortType == "type") {
-        console.log(typeSort(props.cardLibrary));
         setData(typeSort(props.cardLibrary));
         setRefresh(!props.refresh);
       }
@@ -155,10 +152,9 @@ function Feed(props) {
     );
   }
 
-  const loadCard = (name) =>{
-
-    props.loadCard(name)
-  }
+  const loadCard = (name) => {
+    props.loadCard(name);
+  };
 
   function clearLibrary() {
     props.clearLibrary();
@@ -170,61 +166,60 @@ function Feed(props) {
     if (type == "monsters") {
       listItem = (
         <div class="w-full relative flex flex-row">
-        <PurpleButton
-          variant="contained"
-          color="primary"
-          name="Monster Item"
-          onClick={() => props.loadCard(name)}
-          className="w-full p-4 cursor-pointer"
-        >
-          <div className="flex flex-row items-center w-5/6 pr-1">
-            <Skull className="w-4 h-4 mr-2" fill="black" />
-            <p className="modesto-condensed text-2xl uppercase text-black truncate">
-              {name}
-            </p>
-          </div>
-
-        </PurpleButton>
-        <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+          <PurpleButton
+            variant="contained"
+            color="primary"
+            name="Monster Item"
+            onClick={() => props.loadCard(name)}
+            className="w-full p-4 cursor-pointer"
+          >
+            <div className="flex flex-row items-center w-5/6 pr-1">
+              <Skull className="w-4 h-4 mr-2" fill="black" />
+              <p className="modesto-condensed text-2xl uppercase text-black truncate">
+                {name}
+              </p>
+            </div>
+          </PurpleButton>
+          <RemoveItemBtn removeAction={() => props.removeCard(name)} />
         </div>
       );
     } else if (type == "loot") {
       listItem = (
         <div class="w-full relative flex flex-row">
-        <OrangeButton
-          variant="contained"
-          color="primary"
-          onClick={() => props.loadCard(name)}
-          className="w-full p-4 cursor-pointer"
-        >
-          <div className="flex flex-row items-center w-5/6 pr-1">
-            <Loot className="w-4 h-4 mr-2 " fill="black" />
-            <p className="modesto-condensed text-2xl uppercase text-black truncate">
-              {name}
-            </p>
-          </div>
-        </OrangeButton>
-         <RemoveItemBtn removeAction={() => props.removeCard(name)} />
-         </div>
+          <OrangeButton
+            variant="contained"
+            color="primary"
+            onClick={() => props.loadCard(name)}
+            className="w-full p-4 cursor-pointer"
+          >
+            <div className="flex flex-row items-center w-5/6 pr-1">
+              <Loot className="w-4 h-4 mr-2 " fill="black" />
+              <p className="modesto-condensed text-2xl uppercase text-black truncate">
+                {name}
+              </p>
+            </div>
+          </OrangeButton>
+          <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+        </div>
       );
     } else if (type == "spells") {
       listItem = (
         <div class="w-full relative flex flex-row">
-        <BlueButton
-          variant="contained"
-          color="primary"
-          onClick={() => props.loadCard(name)}
-          className="w-full p-4 cursor-pointer"
-        >
-          <div className="flex flex-row items-center w-5/6 pr-1">
-            <Spells className="w-4 h-4 mr-2" fill="black" />
-            <p className="modesto-condensed text-2xl uppercase text-black truncate ">
-              {name}
-            </p>
-          </div>
-        </BlueButton>
-         <RemoveItemBtn removeAction={() => props.removeCard(name)} />
-         </div>
+          <BlueButton
+            variant="contained"
+            color="primary"
+            onClick={() => props.loadCard(name)}
+            className="w-full p-4 cursor-pointer"
+          >
+            <div className="flex flex-row items-center w-5/6 pr-1">
+              <Spells className="w-4 h-4 mr-2" fill="black" />
+              <p className="modesto-condensed text-2xl uppercase text-black truncate ">
+                {name}
+              </p>
+            </div>
+          </BlueButton>
+          <RemoveItemBtn removeAction={() => props.removeCard(name)} />
+        </div>
       );
     }
 

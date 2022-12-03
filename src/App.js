@@ -9,9 +9,7 @@ import Logo from "./components/Logo";
 import { Helmet } from "react-helmet";
 import * as utils from "./assets/utils.js";
 
-
 const storage = localStorage.getItem("cardLibrary");
-
 
 function App() {
   const [data, setData] = useState("");
@@ -21,12 +19,9 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activePanel, setActivePanel] = useState("monsters");
 
-
   useEffect(() => {
     document.title = ">>DND-Fetch>";
   }, []);
-
-
 
   function handleSaveCard(cardObj) {
     let array = cardLibrary;
@@ -35,9 +30,7 @@ function App() {
     setCardLibrary(array);
     localStorage.setItem("cardLibrary", JSON.stringify(cardLibrary));
     setRefresh(!refresh);
-    console.log(cardLibrary);
   }
-
 
   function removeCard(name) {
     let newLibrary = cardLibrary.filter((x) => x.name !== name);
@@ -47,13 +40,11 @@ function App() {
   }
 
   function loadCard(name) {
-    console.log(name);
     cardLibrary.forEach(function (obj) {
       if (obj.name == name) {
         setData(obj);
         setRefresh(!refresh);
         setIsLoaded(true);
-        console.log(obj);
         return false;
       }
     });
