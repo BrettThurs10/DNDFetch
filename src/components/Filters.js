@@ -33,7 +33,6 @@ const spellSchools = [
 
 const spellLevels = ["Any", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-
 function Filters(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState([]);
@@ -46,7 +45,7 @@ function Filters(props) {
   const [spellLevelCat, setSpellLevelCats] = useState("Any");
   const [spellLevelChoice, setSpellLevelChoice] = useState("Any");
   const [loot, setLoot] = useState("Adventuring Gear");
-  const [firstTime, setFirstTime] = useState(true)
+  const [firstTime, setFirstTime] = useState(true);
   // Set to false so when getQuery first runs it will show the search panel in mobile - desktop doesn't utilize show/hide for search panel
   const [controlsVisible, setControls] = useState(true);
 
@@ -57,7 +56,6 @@ function Filters(props) {
     if (end == undefined || isNaN(end)) {
       end = 30;
     }
-    console.log(`start ${start} end ${end}`);
     return Array(end - start + 1)
       .fill()
       .map((_, idx) => start + idx);
@@ -82,8 +80,8 @@ function Filters(props) {
     let randomURL;
     if (panel == "monsters") {
       randomChoice = res[randomNum]?.index ?? undefined;
-      if (randomChoice == undefined){
-        getQuery(panel, true)
+      if (randomChoice == undefined) {
+        getQuery(panel, true);
       }
       randomURL = `https://www.dnd5eapi.co/api/monsters/${randomChoice}`;
     } else if (panel == "spells") {
@@ -98,7 +96,6 @@ function Filters(props) {
     await fetch(randomURL)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (cardType !== undefined) {
           res.cardType = cardType;
         }
@@ -117,7 +114,6 @@ function Filters(props) {
             subtype = utils.race[randomNum];
           }
         }
-        // console.log(res)
         props.setData(res);
         setIsLoaded(true);
         props.isLoaded(true);
@@ -125,23 +121,22 @@ function Filters(props) {
   }
 
   async function getQuery(cardType) {
-    if (utils.isMobileSize && !firstTime){
-      setControls(false)
+    if (utils.isMobileSize && !firstTime) {
+      setControls(false);
     }
-    setFirstTime(false)
+    setFirstTime(false);
     await props.setActivePanel(panel);
     let url;
     if (panel == "monsters") {
       const min = getVal("challengeMin") ?? 0;
       const max = getVal("challengeMax") ?? 30;
 
-      const crs = []
+      const crs = [];
       for (let i = min; i < max; i++) {
-        crs.push("challenge_rating="+i);
+        crs.push("challenge_rating=" + i);
       }
       url = `https://www.dnd5eapi.co/api/monsters/?${crs.join("&")}`;
     } else if (panel == "loot") {
-      console.log(`loot is set to ${loot}`);
       let formattedLoot = loot
         .replace(/\s+/g, "-")
         .toLowerCase()
@@ -157,7 +152,6 @@ function Filters(props) {
       if (level !== null) {
         url = url + "level=" + level;
       }
-      console.log(url);
     }
     await fetch(url)
       .then((res) => res.json())
@@ -169,7 +163,6 @@ function Filters(props) {
           }
 
           if (res) {
-            console.log(res);
             getDetail(res, cardType);
           } else {
             alert("Sorry, I could not find anything related to this search.");
@@ -194,8 +187,6 @@ function Filters(props) {
     makeSpellLevels();
   }, []);
 
-
-
   async function makeLootItems() {
     let url = `https://www.dnd5eapi.co/api/equipment-categories/`;
     let lootArr = [];
@@ -216,7 +207,6 @@ function Filters(props) {
           );
         });
         setLootCats(lootArr);
-        console.log(lootArr[0]);
       });
   }
 
@@ -258,16 +248,15 @@ function Filters(props) {
     } else if (panel == "loot") {
       return <LootPanel loot={loot} lootCats={lootCats} />;
     } else if (panel == "spells") {
-      return(
+      return (
         <SpellsPanel
-        data={data}
-        spellSchoolCats={spellSchoolCats}
-        spellSchoolChoice={spellSchoolChoice}
-        spellLevelCat={spellLevelCat}
-        spellLevelChoice={spellLevelChoice}
+          data={data}
+          spellSchoolCats={spellSchoolCats}
+          spellSchoolChoice={spellSchoolChoice}
+          spellLevelCat={spellLevelCat}
+          spellLevelChoice={spellLevelChoice}
         />
-      )
-
+      );
     }
   }
 
@@ -285,7 +274,6 @@ function Filters(props) {
     }
     setPanel(val);
   }
-
 
   function determinePanelBG() {
     if (panel == "monsters") {
@@ -363,10 +351,10 @@ function Filters(props) {
                 disabled && "opacity-25"
               } self-end`}
             >
-              <p className="mr-3 text-center sm:text-left w-full">Fetch it</p> {chevronRight}
+              <p className="mr-3 text-center sm:text-left w-full">Fetch it</p>{" "}
+              {chevronRight}
             </button>
           </div>
-
         </div>
       </div>
     </div>
